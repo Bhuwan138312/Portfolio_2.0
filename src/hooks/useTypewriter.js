@@ -63,11 +63,11 @@ export default function useTypewriter({
       timer.current = setTimeout(() =>
         setCursorPos(p => p - 1), backtrackSpeed);
     } else {
-      // Arrived — hand off to cycling
+      // Arrived — hand off to cycling, start with selection animation
       timer.current = setTimeout(() => {
         setDisplayed(words[0] || '');
         setWordIndex(0);
-        setCyclePhase('deleting');
+        setCyclePhase('selecting');
         setMode('cycling');
       }, pauseBefore);
     }
@@ -80,7 +80,11 @@ export default function useTypewriter({
     const clear = () => clearTimeout(timer.current);
     const word = words[wordIndex % words.length];
 
-    if (cyclePhase === 'typing') {
+    if (cyclePhase === 'selecting') {
+      // Wait for the selection animation to finish before we pause and delete
+      timer.current = setTimeout(() => setCyclePhase('pausing'), 1200);
+
+    } else if (cyclePhase === 'typing') {
       if (displayed.length < word.length) {
         timer.current = setTimeout(() =>
           setDisplayed(word.slice(0, displayed.length + 1)), typeSpeed);
@@ -113,6 +117,7 @@ export default function useTypewriter({
 
   return {
     mode,          // 'idle' | 'intro' | 'backtracking' | 'cycling'
+    cyclePhase,    // 'selecting' | 'typing' | 'pausing' | 'deleting' | 'waiting'
     displayed,     // typed text (intro) or current cycling word
     cursorPos,     // cursor index within introText (backtracking only)
     introText,     // full intro string (needed for backtracking render)

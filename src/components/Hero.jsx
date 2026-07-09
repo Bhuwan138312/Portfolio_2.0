@@ -4,21 +4,21 @@ import useTypewriter from '../hooks/useTypewriter';
 import './Hero.css';
 
 export default function Hero() {
-  const canvasRef  = useRef(null);
-  const mouseRef   = useRef({ x: -9999, y: -9999 });
+  const canvasRef = useRef(null);
+  const mouseRef = useRef({ x: -9999, y: -9999 });
   const magPrimary = useMagnetic(0.40);
-  const magGhost   = useMagnetic(0.30);
-  const { mode, displayed, cursorPos, introText, isTyping } = useTypewriter({
-    introText:       'Backend Developer · Java · Spring Boot · Python',
-    words:           ['Developer', 'Designer', 'Builder'],
-    introSpeed:      55,
-    backtrackSpeed:  22,
-    typeSpeed:       85,
-    deleteSpeed:     40,
+  const magGhost = useMagnetic(0.30);
+  const { mode, cyclePhase, displayed, cursorPos, introText, isTyping } = useTypewriter({
+    introText: 'Backend Developer · Java · Spring Boot · Python',
+    words: ['Developer', 'Designer', 'Builder'],
+    introSpeed: 55,
+    backtrackSpeed: 22,
+    typeSpeed: 85,
+    deleteSpeed: 40,
     pauseAfterIntro: 900,
-    pauseAfter:      1800,
-    pauseBefore:     350,
-    startDelay:      1200,
+    pauseAfter: 1800,
+    pauseBefore: 350,
+    startDelay: 1200,
   });
 
   useEffect(() => {
@@ -204,13 +204,13 @@ export default function Hero() {
         const dispX = (d.x - d.ox) - floatX;
         const dispY = (d.y - d.oy) - floatY;
         const disp2 = Math.hypot(dispX, dispY);
-        
+
         const energy = Math.min(disp2 / (PUSH_FORCE * 0.9), 1);
         const curDist = Math.hypot(d.x - mx, d.y - my);
         const prox = Math.max(0, 1 - curDist / (PUSH_R * 1.6));
 
         const alpha = energy * 0.55 + prox * 0.08;
-        
+
         // Skip drawing if completely invisible
         if (alpha > 0.01) {
           const radius = BASE_R + energy * 3.8;
@@ -263,9 +263,9 @@ export default function Hero() {
           )}
           {mode === 'cycling' && (
             <>
-              Backend&nbsp;<span className="typewriter-word">{displayed}</span>
+              Backend&nbsp;<span className={`typewriter-word ${cyclePhase === 'selecting' ? 'selecting-anim' : ''}`}>{displayed}</span>
               <span className={`typewriter-cursor${isTyping ? '' : ' blink'}`}>|</span>
-              &nbsp;<span className="sep">·</span>&nbsp;Java · Spring Boot · Python
+              <span className="sep">·</span>&nbsp;Java · Spring Boot · Python
             </>
           )}
         </p>

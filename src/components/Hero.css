@@ -24,11 +24,12 @@
   margin: 0 auto;
   padding: 0 1.5rem;
   padding-top: 100px;
-  pointer-events: none; /* Let clicks pass through empty space to canvas */
+  pointer-events: none;
+  /* Let clicks pass through empty space to canvas */
 }
 
 /* Re-enable pointer events for actual content (text, buttons) */
-.hero-content > * {
+.hero-content>* {
   pointer-events: auto;
 }
 
@@ -71,8 +72,43 @@
 
 /* ── Typewriter ────────────────────────────── */
 .typewriter-word {
+  position: relative;
+  display: inline-block;
   color: var(--accent);
   font-weight: 600;
+}
+
+.typewriter-word::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 0%;
+  background-color: rgba(124, 152, 133, 0.5);
+  z-index: -1;
+}
+
+.selecting-anim {
+  animation: textColorChange 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.selecting-anim::after {
+  animation: highlightSweep 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes highlightSweep {
+  0%   { width: 0%; opacity: 1; }
+  30%  { width: 100%; opacity: 1; }
+  70%  { width: 100%; opacity: 1; }
+  100% { width: 100%; opacity: 0; }
+}
+
+@keyframes textColorChange {
+  0%   { color: var(--text-muted); }
+  30%  { color: var(--text-muted); }
+  70%  { color: var(--accent); }
+  100% { color: var(--accent); }
 }
 
 .typewriter-cursor {

@@ -151,3 +151,134 @@
     gap: 3rem;
   }
 }
+
+/* ── MessageBox (Floating Chat Bubble) ─────────────────── */
+.msg-box {
+  position: fixed;
+  bottom: 9.5rem;
+  right: 2.5rem;
+  z-index: 9999;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.4rem;
+  width: 290px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  animation: msg-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  overflow: hidden;
+}
+
+/* The Speech Bubble Tail pointing right */
+.msg-box::after {
+  content: '';
+  position: absolute;
+  top: 35px;
+  right: -7.5px;
+  width: 14px;
+  height: 14px;
+  background: var(--surface);
+  border-top: 1.5px solid var(--border);
+  border-right: 1.5px solid var(--border);
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+
+.msg-box--out {
+  animation: msg-out 0.35s ease forwards;
+}
+
+/* Success vs Error Styling */
+.msg-box--error { border-color: rgba(220, 100, 80, 0.3); }
+.msg-box--error::after { border-color: rgba(220, 100, 80, 0.3); }
+.msg-box--error .msg-box__icon {
+  background: rgba(220, 100, 80, 0.1);
+  color: #dc6450;
+  border: 1px solid rgba(220, 100, 80, 0.25);
+}
+
+.msg-box--success { border-color: rgba(124, 152, 133, 0.35); }
+.msg-box--success::after { border-color: rgba(124, 152, 133, 0.35); }
+.msg-box--success .msg-box__icon {
+  background: rgba(124, 152, 133, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(124, 152, 133, 0.25);
+}
+
+.msg-box__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.msg-box__content { flex: 1; }
+
+.msg-box__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.msg-box__text {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.msg-box__close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s, transform 0.2s;
+}
+.msg-box__close:hover {
+  color: var(--text);
+  transform: scale(1.1);
+}
+
+@keyframes msg-in {
+  0%   { opacity: 0; transform: translateX(40px) scale(0.9); }
+  50%  { opacity: 1; transform: translateX(-8px) scale(1.02); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes msg-out {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to   { opacity: 0; transform: translateX(30px) scale(0.95); }
+}
+
+/* ── Progress Bar ────────────────────────────── */
+.msg-box__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: var(--accent);
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+  animation: msg-drain linear forwards;
+}
+
+.msg-box--error .msg-box__progress {
+  background: #dc6450;
+}
+
+@keyframes msg-drain {
+  from { width: 100%; }
+  to   { width: 0%; }
+}

@@ -3,33 +3,44 @@ import { useForm, ValidationError } from '@formspree/react';
 import useMagnetic from '../hooks/useMagnetic';
 import './Contact.css';
 
-/* ── Toast (Success notification) ────────────────────────── */
-const TOAST_DURATION = 4000;
+/* ── MessageBox (Floating Chat Bubble) ─────────────────── */
+const MSG_DURATION = 3000;
 
-function Toast({ onClose }) {
+function MessageBox({ type, missing, onClose }) {
   const [leaving, setLeaving] = useState(false);
 
   const dismiss = () => {
     setLeaving(true);
-    setTimeout(onClose, 360);
+    setTimeout(onClose, 350);
   };
 
   useEffect(() => {
-    const t = setTimeout(dismiss, TOAST_DURATION);
+    const t = setTimeout(dismiss, MSG_DURATION);
     return () => clearTimeout(t);
   }, []); // eslint-disable-line
 
+  const isError = type === 'error';
+
   return (
-    <div className="toast-wrap">
-      <div className={`toast${leaving ? ' leaving' : ''}`}>
-        <div className="toast-icon">✓</div>
-        <div className="toast-body">
-          <p className="toast-title">Message sent!</p>
-          <p className="toast-msg">I'll get back to you shortly — usually within 24 hours.</p>
-        </div>
-        <button className="toast-close" onClick={dismiss} aria-label="Dismiss">×</button>
-        <div className="toast-progress" style={{ animationDuration: `${TOAST_DURATION}ms` }} />
+    <div className={`msg-box ${isError ? 'msg-box--error' : 'msg-box--success'} ${leaving ? 'msg-box--out' : ''}`}>
+      <div className="msg-box__icon">
+        {isError ? '⚠️' : '✓'}
       </div>
+      <div className="msg-box__content">
+        <p className="msg-box__title">{isError ? 'Missing Fields' : 'Message Sent!'}</p>
+        {isError ? (
+          <div className="msg-box__text">
+            Please fill in the following:
+            <ul style={{ margin: '4px 0 0 0', paddingLeft: '20px' }}>
+              {missing?.map(f => <li key={f}>{f}</li>)}
+            </ul>
+          </div>
+        ) : (
+          <p className="msg-box__text">I'll get back to you shortly — usually within 24 hours.</p>
+        )}
+      </div>
+      <button className="msg-box__close" onClick={dismiss}>×</button>
+      <div className="msg-box__progress" style={{ animationDuration: `${MSG_DURATION}ms` }} />
     </div>
   );
 }
@@ -86,7 +97,7 @@ function MagneticSocial({ href, ariaLabel, children }) {
 /* ── Contact section ─────────────────────────────────────── */
 export default function Contact() {
   const [form, setForm]           = useState({ name: '', email: '', message: '' });
-  const [showToast, setShowToast] = useState(false);
+  const [msgBox, setMsgBox]       = useState(null); // 'success' | 'error' | null
   const [state, handleSubmit]     = useForm('xnjqyknw');
   const magSubmit                 = useMagnetic(0.25);
 
@@ -96,9 +107,23 @@ export default function Contact() {
   useEffect(() => {
     if (state.succeeded) {
       setForm({ name: '', email: '', message: '' });
-      setShowToast(true);
+      setMsgBox({ type: 'success' });
     }
   }, [state.succeeded]);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const missed = [];
+    if (!form.name.trim()) missed.push('Name');
+    if (!form.email.trim()) missed.push('Email');
+    if (!form.message.trim()) missed.push('Message');
+
+    if (missed.length > 0) {
+      setMsgBox({ type: 'error', missing: missed });
+      return;
+    }
+    handleSubmit(e);
+  };
 
   return (
     <section id="contact" className="section">
@@ -109,20 +134,20 @@ export default function Contact() {
           Have a project in mind? I'd love to hear about it. Drop me a message and I'll get back within 24 hours.
         </p>
         <div className="contact-grid">
-          <form className="contact-form reveal-left" onSubmit={handleSubmit}>
+          <form className="contact-form reveal-left" onSubmit={onSubmit} noValidate>
             <div className="form-group">
               <label htmlFor="name">Name</label>
-              <input id="name" name="name" type="text" value={form.name} onChange={handle} placeholder="Your full name" required />
+              <input id="name" name="name" type="text" value={form.name} onChange={handle} placeholder="Your full name" />
               <ValidationError prefix="Name" field="name" errors={state.errors} />
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input id="email" name="email" type="email" value={form.email} onChange={handle} placeholder="your@email.com" required />
+              <input id="email" name="email" type="email" value={form.email} onChange={handle} placeholder="your@email.com" />
               <ValidationError prefix="Email" field="email" errors={state.errors} />
             </div>
             <div className="form-group">
               <label htmlFor="message">Message</label>
-              <textarea id="message" name="message" rows={5} value={form.message} onChange={handle} placeholder="Tell me about your project..." required />
+              <textarea id="message" name="message" rows={5} value={form.message} onChange={handle} placeholder="Tell me about your project..." />
               <ValidationError prefix="Message" field="message" errors={state.errors} />
             </div>
             <button
@@ -165,7 +190,7 @@ export default function Contact() {
           </div>
         </div>
       </div>
-      {showToast && <Toast onClose={() => setShowToast(false)} />}
+      {msgBox && <MessageBox type={msgBox.type} missing={msgBox.missing} onClose={() => setMsgBox(null)} />}
     </section>
   );
 }

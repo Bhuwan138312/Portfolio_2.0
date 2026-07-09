@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useMagnetic from '../hooks/useMagnetic';
+import useTilt from '../hooks/useTilt';
 import './Projects.css';
 
 const projects = [
@@ -68,65 +70,68 @@ const projects = [
   },
 ];
 
+/* ── Single card with its own tilt instance ─── */
+function ProjectCard({ p, className = '' }) {
+  const { ref, tiltProps } = useTilt({ max: 12, scale: 1.04, ease: 0.10 });
+
+  return (
+    <article
+      ref={ref}
+      className={`project-card ${className}`}
+      style={{ willChange: 'transform' }}
+      {...tiltProps}
+    >
+      {/* Glare overlay — position updated by useTilt */}
+      <div className="tilt-glare" />
+
+      <div className="card-img-wrap">
+        <div
+          className="card-img-placeholder"
+          style={{ background: `linear-gradient(135deg, ${p.gradient[0]}, ${p.gradient[1]})` }}
+        >
+          {p.letter}
+        </div>
+        <div className="card-overlay">
+          {p.live !== '#' && (
+            <a href={p.live} className="overlay-btn" target="_blank" rel="noreferrer">↗ Live Demo</a>
+          )}
+          <a href={p.code} className="overlay-btn" target="_blank" rel="noreferrer">⌥ Source</a>
+        </div>
+      </div>
+
+      <div className="card-body">
+        <h3>{p.title}</h3>
+        <p>{p.desc}</p>
+        <div className="card-tags">
+          {p.tags.map((t) => <span key={t}>{t}</span>)}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ── Section ──────────────────────────────────── */
 export default function Projects() {
   const [showAll, setShowAll] = useState(false);
+  const magToggle = useMagnetic(0.35);
 
   return (
     <section id="projects" className="section">
       <div className="container">
         <span className="section-tag reveal-fade">My Work</span>
         <h2 className="section-title reveal-up">Featured Projects</h2>
+
         <div className="projects-grid">
           {projects.slice(0, 6).map((p) => (
-            <article className="project-card stagger-item" key={p.title}>
-              <div className="card-img-wrap">
-                <div
-                  className="card-img-placeholder"
-                  style={{ background: `linear-gradient(135deg, ${p.gradient[0]}, ${p.gradient[1]})` }}
-                >
-                  {p.letter}
-                </div>
-                <div className="card-overlay">
-                  {p.live !== '#' && <a href={p.live} className="overlay-btn" target="_blank" rel="noreferrer">↗ Live Demo</a>}
-                  <a href={p.code} className="overlay-btn" target="_blank" rel="noreferrer">⌥ Source</a>
-                </div>
-              </div>
-              <div className="card-body">
-                <h3>{p.title}</h3>
-                <p>{p.desc}</p>
-                <div className="card-tags">
-                  {p.tags.map((t) => <span key={t}>{t}</span>)}
-                </div>
-              </div>
-            </article>
+            <ProjectCard key={p.title} p={p} className="stagger-item" />
           ))}
         </div>
-        
+
         <div className={`projects-more-wrap ${showAll ? 'expanded' : ''}`}>
           <div className="projects-more-inner">
             <div className="projects-grid" style={{ paddingTop: '1.75rem' }}>
               {projects.slice(6).map((p) => (
-                <article className="project-card stagger-item visible" key={p.title}>
-                  <div className="card-img-wrap">
-                    <div
-                      className="card-img-placeholder"
-                      style={{ background: `linear-gradient(135deg, ${p.gradient[0]}, ${p.gradient[1]})` }}
-                    >
-                      {p.letter}
-                    </div>
-                    <div className="card-overlay">
-                      {p.live !== '#' && <a href={p.live} className="overlay-btn" target="_blank" rel="noreferrer">↗ Live Demo</a>}
-                      <a href={p.code} className="overlay-btn" target="_blank" rel="noreferrer">⌥ Source</a>
-                    </div>
-                  </div>
-                  <div className="card-body">
-                    <h3>{p.title}</h3>
-                    <p>{p.desc}</p>
-                    <div className="card-tags">
-                      {p.tags.map((t) => <span key={t}>{t}</span>)}
-                    </div>
-                  </div>
-                </article>
+                <ProjectCard key={p.title} p={p} className="stagger-item visible" />
               ))}
             </div>
           </div>
@@ -134,7 +139,13 @@ export default function Projects() {
 
         {projects.length > 6 && (
           <div style={{ textAlign: 'center', marginTop: '3rem' }} className="reveal-up">
-            <button className="btn btn-ghost" onClick={() => setShowAll(!showAll)}>
+            <button
+              ref={magToggle.ref}
+              {...magToggle.magneticProps}
+              className="btn btn-ghost"
+              style={{ willChange: 'transform' }}
+              onClick={() => setShowAll(!showAll)}
+            >
               {showAll ? 'Show Less ↑' : 'Show More ↓'}
             </button>
           </div>

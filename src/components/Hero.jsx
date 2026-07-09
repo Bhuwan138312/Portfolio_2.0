@@ -1,9 +1,25 @@
 import { useEffect, useRef } from 'react';
+import useMagnetic from '../hooks/useMagnetic';
+import useTypewriter from '../hooks/useTypewriter';
 import './Hero.css';
 
 export default function Hero() {
-  const canvasRef = useRef(null);
-  const mouseRef = useRef({ x: -9999, y: -9999 });
+  const canvasRef  = useRef(null);
+  const mouseRef   = useRef({ x: -9999, y: -9999 });
+  const magPrimary = useMagnetic(0.40);
+  const magGhost   = useMagnetic(0.30);
+  const { mode, displayed, cursorPos, introText, isTyping } = useTypewriter({
+    introText:       'Backend Developer · Java · Spring Boot · Python',
+    words:           ['Developer', 'Designer', 'Builder'],
+    introSpeed:      55,
+    backtrackSpeed:  22,
+    typeSpeed:       85,
+    deleteSpeed:     40,
+    pauseAfterIntro: 900,
+    pauseAfter:      1800,
+    pauseBefore:     350,
+    startDelay:      1200,
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -95,8 +111,24 @@ export default function Hero() {
       prevMouse = null;
     };
 
+    const onClick = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const nx = e.clientX - rect.left;
+      const ny = e.clientY - rect.top;
+      const now = performance.now();
+
+      if (ripples.length >= MAX_RIPPLES) ripples.shift();
+      ripples.push({
+        x: nx,
+        y: ny,
+        t: now,
+        strength: 2.2, // large splash for tap/click
+      });
+    };
+
     canvas.addEventListener('mousemove', onMove);
     canvas.addEventListener('mouseleave', onLeave);
+    canvas.addEventListener('click', onClick);
 
     /* ── draw loop ─────────────────────────────── */
     const draw = (ts) => {
@@ -203,6 +235,7 @@ export default function Hero() {
       window.removeEventListener('resize', resize);
       canvas.removeEventListener('mousemove', onMove);
       canvas.removeEventListener('mouseleave', onLeave);
+      canvas.removeEventListener('click', onClick);
     };
   }, []);
 
@@ -215,20 +248,50 @@ export default function Hero() {
           <span className="reveal-left" style={{ display: 'inline-block', transitionDelay: '0.3s' }}>Bhuwan</span><br />
           <span className="name-stroke reveal-right" style={{ display: 'inline-block', transitionDelay: '0.7s' }}>Shrestha</span>
         </h1>
+        {/* ── hero-role: single element, content changes per phase ── */}
         <p className="hero-role reveal-right" style={{ transitionDelay: '1.1s' }}>
-          Backend Developer&nbsp;<span className="sep">·</span>&nbsp;Java · Spring Boot · Python
+          {mode === 'idle' && <>&nbsp;</>}
+          {mode === 'intro' && (
+            <>{displayed}<span className="typewriter-cursor blink">|</span></>
+          )}
+          {mode === 'backtracking' && (
+            <>
+              {introText.slice(0, cursorPos)}
+              <span className="typewriter-cursor">|</span>
+              {introText.slice(cursorPos)}
+            </>
+          )}
+          {mode === 'cycling' && (
+            <>
+              Backend&nbsp;<span className="typewriter-word">{displayed}</span>
+              <span className={`typewriter-cursor${isTyping ? '' : ' blink'}`}>|</span>
+              &nbsp;<span className="sep">·</span>&nbsp;Java · Spring Boot · Python
+            </>
+          )}
         </p>
         <p className="hero-tagline reveal-up" style={{ transitionDelay: '1.4s' }}>
           I build <em>robust</em>, scalable backend systems that power great
           digital products — clean APIs, solid architecture, real impact.
         </p>
         <div className="hero-cta reveal-up" style={{ transitionDelay: '1.7s' }}>
-          <a href="#projects" className="btn btn-primary"
-            onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }}>
+          <a
+            ref={magPrimary.ref}
+            {...magPrimary.magneticProps}
+            href="#projects"
+            className="btn btn-primary"
+            style={{ willChange: 'transform', display: 'inline-flex' }}
+            onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }}
+          >
             View My Work ↓
           </a>
-          <a href="#contact" className="btn btn-ghost"
-            onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}>
+          <a
+            ref={magGhost.ref}
+            {...magGhost.magneticProps}
+            href="#contact"
+            className="btn btn-ghost"
+            style={{ willChange: 'transform', display: 'inline-flex' }}
+            onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+          >
             Get In Touch
           </a>
         </div>

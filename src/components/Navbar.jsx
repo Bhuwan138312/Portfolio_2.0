@@ -11,9 +11,10 @@ const overlapFraction = (pillLeft, pillWidth, lLeft, lWidth) => {
 };
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen]         = useState(false);
-  const [pill, setPill]         = useState({ left: 0, width: 0, opacity: 0 });
+  const [scrolled, setScrolled]        = useState(false);
+  const [open, setOpen]                = useState(false);
+  const [pill, setPill]                = useState({ left: 0, width: 0, opacity: 0 });
+  const progressBarRef                 = useRef(null);
 
   const navLinksRef   = useRef(null);
   const linkRefs      = useRef({});
@@ -107,6 +108,13 @@ export default function Navbar() {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
       computeTarget();
+      // Write directly to DOM — no setState, no re-render lag
+      if (progressBarRef.current) {
+        const el  = document.documentElement;
+        const pct = el.scrollTop / (el.scrollHeight - el.clientHeight);
+        progressBarRef.current.style.width =
+          (Number.isFinite(pct) ? Math.min(pct * 100, 100) : 0) + '%';
+      }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -146,6 +154,8 @@ export default function Navbar() {
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      {/* ── Scroll progress bar ── */}
+      <div ref={progressBarRef} className="scroll-progress-bar" style={{ width: '0%' }} />
       <div className="nav-inner">
         <a href="#hero" className="nav-logo" onClick={(e) => handleClick(e, '#hero')}>
           BS<span>.</span>

@@ -3,21 +3,38 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1.75rem;
 }
+
 .project-card {
   background: var(--surface);
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   overflow: hidden;
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition: box-shadow var(--transition);
+  transform-style: preserve-3d;
+  will-change: transform;
+  position: relative;
 }
+
 .project-card:hover {
-  transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
 }
+
+/* Glare highlight — repositioned by useTilt each frame */
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
 .card-img-wrap {
   position: relative;
   overflow: hidden;
 }
+
 .card-img-placeholder {
   height: 180px;
   display: flex;
@@ -26,16 +43,18 @@
   font-family: var(--font-display);
   font-size: 3.5rem;
   font-weight: 800;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
   transition: transform var(--transition-slow);
 }
+
 .project-card:hover .card-img-placeholder {
   transform: scale(1.05);
 }
+
 .card-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(30,41,59,0.7);
+  background: rgba(30, 41, 59, 0.7);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -44,26 +63,33 @@
   opacity: 0;
   transition: opacity var(--transition);
 }
-.project-card:hover .card-overlay { opacity: 1; }
+
+.project-card:hover .card-overlay {
+  opacity: 1;
+}
+
 .overlay-btn {
   padding: 9px 20px;
   border-radius: var(--radius-full);
-  background: rgba(255,255,255,0.15);
-  border: 1.5px solid rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
   color: #fff;
   font-size: 0.82rem;
   font-weight: 600;
   backdrop-filter: blur(4px);
   transition: background var(--transition), transform var(--transition);
 }
+
 .overlay-btn:hover {
   background: var(--accent);
   border-color: var(--accent);
   transform: scale(1.05);
 }
+
 .card-body {
   padding: 1.4rem;
 }
+
 .card-body h3 {
   font-family: var(--font-display);
   font-size: 1.05rem;
@@ -71,17 +97,20 @@
   margin-bottom: 0.5rem;
   color: var(--text);
 }
+
 .card-body p {
   font-size: 0.88rem;
   color: var(--text-muted);
   line-height: 1.65;
   margin-bottom: 1rem;
 }
+
 .card-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
+
 .card-tags span {
   font-size: 0.72rem;
   font-weight: 600;
@@ -93,10 +122,15 @@
 }
 
 @media (max-width: 1024px) {
-  .projects-grid { grid-template-columns: repeat(2, 1fr); }
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
 @media (max-width: 600px) {
-  .projects-grid { grid-template-columns: 1fr; }
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .projects-more-wrap {
@@ -104,9 +138,26 @@
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .projects-more-wrap.expanded {
   grid-template-rows: 1fr;
 }
+
+/* overflow:hidden is required on both states for the grid animation to clip correctly */
 .projects-more-inner {
   overflow: hidden;
+  min-height: 0;
+  /*
+   * Padding gives card box-shadows room to breathe so they aren’t clipped.
+   * Negative margin-bottom cancels the extra bottom space in layout.
+   */
+  padding: 4px 4px 24px;
+  margin-bottom: -24px;
+}
+
+/* Ensure the projects section stacks above the next section’s background */
+#projects {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 60px; /* Extra room so shadows + Show Less btn don’t get clipped */
 }

@@ -254,6 +254,8 @@ button {
 
 .section-alt {
   background: var(--bg-alt);
+  position: relative;
+  z-index: 0;
 }
 
 .section-tag {

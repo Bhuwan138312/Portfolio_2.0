@@ -1,0 +1,84 @@
+/* ── Pill indicator ─────────────────────────── */
+.nav-links-wrap {
+  position: relative;
+}
+
+.nav-links {
+  position: relative;
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+  align-items: center;
+}
+
+/* The sliding rounded-rectangle — NO transition, tracks scroll directly */
+.nav-pill {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 34px;
+  background: rgba(124, 152, 133, 0.12);
+  border: 1.5px solid rgba(124, 152, 133, 0.28);
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 0;
+  /* only fade opacity */
+  transition: opacity 0.2s ease;
+}
+
+/* Links sit above pill */
+.nav-links li { position: relative; z-index: 1; }
+
+.nav-links a {
+  display: inline-block;
+  padding: 6px 16px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-radius: 8px;
+  transform-origin: center center;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+  white-space: nowrap;
+}
+
+/* Remove the old underline animation */
+.nav-links a::after { display: none; }
+
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--accent); font-weight: 600; }
+
+/* ── Mobile drawer ──────────────────────────── */
+.nav-links.mobile-open {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: rgba(250, 250, 250, 0.97);
+    backdrop-filter: blur(16px);
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 0.5rem;
+    border-top: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    z-index: 99;
+  }
+
+  /* Hide pill on mobile */
+  .nav-pill { display: none; }
+
+  .nav-links a {
+    font-size: 1rem;
+    padding: 10px 16px;
+    width: 100%;
+    border-radius: 10px;
+  }
+  .nav-links a.active {
+    background: rgba(124, 152, 133, 0.1);
+  }
+}

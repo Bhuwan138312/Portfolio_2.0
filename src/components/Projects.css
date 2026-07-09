@@ -98,3 +98,15 @@
 @media (max-width: 600px) {
   .projects-grid { grid-template-columns: 1fr; }
 }
+
+.projects-more-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.projects-more-wrap.expanded {
+  grid-template-rows: 1fr;
+}
+.projects-more-inner {
+  overflow: hidden;
+}

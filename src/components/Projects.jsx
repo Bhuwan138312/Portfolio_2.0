@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import './Projects.css';
 
 const projects = [
@@ -68,13 +69,15 @@ const projects = [
 ];
 
 export default function Projects() {
+  const [showAll, setShowAll] = useState(false);
+
   return (
     <section id="projects" className="section">
       <div className="container">
         <span className="section-tag reveal-fade">My Work</span>
         <h2 className="section-title reveal-up">Featured Projects</h2>
         <div className="projects-grid">
-          {projects.map((p) => (
+          {projects.slice(0, 6).map((p) => (
             <article className="project-card stagger-item" key={p.title}>
               <div className="card-img-wrap">
                 <div
@@ -98,6 +101,44 @@ export default function Projects() {
             </article>
           ))}
         </div>
+        
+        <div className={`projects-more-wrap ${showAll ? 'expanded' : ''}`}>
+          <div className="projects-more-inner">
+            <div className="projects-grid" style={{ paddingTop: '1.75rem' }}>
+              {projects.slice(6).map((p) => (
+                <article className="project-card stagger-item visible" key={p.title}>
+                  <div className="card-img-wrap">
+                    <div
+                      className="card-img-placeholder"
+                      style={{ background: `linear-gradient(135deg, ${p.gradient[0]}, ${p.gradient[1]})` }}
+                    >
+                      {p.letter}
+                    </div>
+                    <div className="card-overlay">
+                      {p.live !== '#' && <a href={p.live} className="overlay-btn" target="_blank" rel="noreferrer">↗ Live Demo</a>}
+                      <a href={p.code} className="overlay-btn" target="_blank" rel="noreferrer">⌥ Source</a>
+                    </div>
+                  </div>
+                  <div className="card-body">
+                    <h3>{p.title}</h3>
+                    <p>{p.desc}</p>
+                    <div className="card-tags">
+                      {p.tags.map((t) => <span key={t}>{t}</span>)}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {projects.length > 6 && (
+          <div style={{ textAlign: 'center', marginTop: '3rem' }} className="reveal-up">
+            <button className="btn btn-ghost" onClick={() => setShowAll(!showAll)}>
+              {showAll ? 'Show Less ↑' : 'Show More ↓'}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

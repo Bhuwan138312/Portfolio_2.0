@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './About.css';
 import bhuwanImg from '../assets/bhuwan.jpeg';
+import cvPdf from '../assets/CV.pdf';
 
 const stats = [
   { num: 8, label: 'Featured Projects' },
@@ -66,7 +67,7 @@ export default function About() {
             <div className="about-stats">
               {stats.map((s) => <StatItem key={s.label} {...s} />)}
             </div>
-            <a href="#" className="btn btn-primary">Download CV ↓</a>
+            <a href={cvPdf} target="_blank" rel="noopener noreferrer" className="btn btn-primary">View CV ↗</a>
           </div>
         </div>
       </div>

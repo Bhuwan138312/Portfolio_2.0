@@ -23,8 +23,8 @@ export default function Hero() {
     const WAVE_DECAY = 1.5;     // amplitude decay per second
     const WAVE_LEN = 48;      // wavelength px
     const WAVE_K = (2 * Math.PI) / WAVE_LEN;
-    const EMIT_MS = 85;      // min ms between ripple emissions
-    const MAX_RIPPLES = 16;
+    const EMIT_MS = 40;      // min ms between ripple emissions
+    const MAX_RIPPLES = 24;
 
     const TRAIL_MAX = 28;      // cursor trail history
 
@@ -40,9 +40,19 @@ export default function Hero() {
       dots = [];
       const cols = Math.ceil(canvas.width / SPACING) + 1;
       const rows = Math.ceil(canvas.height / SPACING) + 1;
-      for (let c = 0; c < cols; c++)
-        for (let r = 0; r < rows; r++)
-          dots.push({ ox: c * SPACING, oy: r * SPACING, x: c * SPACING, y: r * SPACING, vx: 0, vy: 0 });
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+          // Add a slight random scatter to their origins
+          const rx = (Math.random() - 0.5) * (SPACING * 0.4);
+          const ry = (Math.random() - 0.5) * (SPACING * 0.4);
+          const ox = c * SPACING + rx;
+          const oy = r * SPACING + ry;
+          // Store a random float phase for organic movement
+          const phase = Math.random() * Math.PI * 2;
+          const phaseSpeed = 0.0005 + Math.random() * 0.001;
+          dots.push({ ox, oy, x: ox, y: oy, vx: 0, vy: 0, phase, phaseSpeed });
+        }
+      }
     };
 
     const resize = () => {
@@ -65,7 +75,8 @@ export default function Hero() {
 
       if (prevMouse) {
         const speed = Math.hypot(nx - prevMouse.x, ny - prevMouse.y);
-        if (speed > 3 && now - lastEmit > EMIT_MS && ripples.length < MAX_RIPPLES) {
+        if (speed > 2 && now - lastEmit > EMIT_MS) {
+          if (ripples.length >= MAX_RIPPLES) ripples.shift();
           ripples.push({
             x: (prevMouse.x + nx) * 0.5,
             y: (prevMouse.y + ny) * 0.5,
@@ -132,8 +143,12 @@ export default function Hero() {
         }
 
         /* direct cursor stick push */
-        let tx = d.ox + wox;
-        let ty = d.oy + woy;
+        // Add a continuous organic float using the stored phase
+        const floatX = Math.sin(now * d.phaseSpeed + d.phase) * 3;
+        const floatY = Math.cos(now * d.phaseSpeed + d.phase) * 3;
+
+        let tx = d.ox + wox + floatX;
+        let ty = d.oy + woy + floatY;
         const cdx = d.ox - mx;
         const cdy = d.oy - my;
         const cdist = Math.hypot(cdx, cdy);
@@ -153,21 +168,29 @@ export default function Hero() {
         d.y += d.vy;
 
         /* visuals — energy drives color + size */
-        const disp2 = Math.hypot(d.x - d.ox, d.y - d.oy);
+        // Subtract float to calculate energy only from mouse/wave interaction
+        const dispX = (d.x - d.ox) - floatX;
+        const dispY = (d.y - d.oy) - floatY;
+        const disp2 = Math.hypot(dispX, dispY);
+        
         const energy = Math.min(disp2 / (PUSH_FORCE * 0.9), 1);
         const curDist = Math.hypot(d.x - mx, d.y - my);
         const prox = Math.max(0, 1 - curDist / (PUSH_R * 1.6));
 
         const alpha = energy * 0.55 + prox * 0.08;
-        const radius = BASE_R + energy * 3.8;
-        const hue = 148 + energy * 38;
-        const sat = 5 + energy * 68 + prox * 10;
-        const light = 54 + energy * 24;
+        
+        // Skip drawing if completely invisible
+        if (alpha > 0.01) {
+          const radius = BASE_R + energy * 3.8;
+          const hue = 148 + energy * 38;
+          const sat = 5 + energy * 68 + prox * 10;
+          const light = 54 + energy * 24;
 
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${hue},${sat}%,${light}%,${alpha})`;
-        ctx.fill();
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, radius, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${hue},${sat}%,${light}%,${alpha})`;
+          ctx.fill();
+        }
       }
 
       animId = requestAnimationFrame(draw);
@@ -187,19 +210,19 @@ export default function Hero() {
     <section id="hero" className="hero">
       <canvas ref={canvasRef} className="hero-canvas" />
       <div className="hero-content">
-        <p className="hero-eyebrow reveal-fade">👋 Hello, I'm</p>
-        <h1 className="hero-name reveal-up">
-          Bhuwan<br />
-          <span className="name-stroke">Shrestha</span>
+        <p className="hero-eyebrow reveal-fade" style={{ transitionDelay: '0.1s' }}>👋 Hello, I'm</p>
+        <h1 className="hero-name">
+          <span className="reveal-left" style={{ display: 'inline-block', transitionDelay: '0.3s' }}>Bhuwan</span><br />
+          <span className="name-stroke reveal-right" style={{ display: 'inline-block', transitionDelay: '0.7s' }}>Shrestha</span>
         </h1>
-        <p className="hero-role reveal-up">
+        <p className="hero-role reveal-right" style={{ transitionDelay: '1.1s' }}>
           Backend Developer&nbsp;<span className="sep">·</span>&nbsp;Java · Spring Boot · Python
         </p>
-        <p className="hero-tagline reveal-up">
+        <p className="hero-tagline reveal-up" style={{ transitionDelay: '1.4s' }}>
           I build <em>robust</em>, scalable backend systems that power great
           digital products — clean APIs, solid architecture, real impact.
         </p>
-        <div className="hero-cta reveal-up">
+        <div className="hero-cta reveal-up" style={{ transitionDelay: '1.7s' }}>
           <a href="#projects" className="btn btn-primary"
             onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }}>
             View My Work ↓
@@ -209,7 +232,7 @@ export default function Hero() {
             Get In Touch
           </a>
         </div>
-        <div className="hero-scroll reveal-fade">
+        <div className="hero-scroll reveal-fade" style={{ transitionDelay: '2.2s' }}>
           <div className="scroll-mouse"><div className="scroll-wheel" /></div>
           <span>Scroll to explore</span>
         </div>

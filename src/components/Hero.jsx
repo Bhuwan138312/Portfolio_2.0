@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef } from 'react';
 import useMagnetic from '../hooks/useMagnetic';
 import useTypewriter from '../hooks/useTypewriter';

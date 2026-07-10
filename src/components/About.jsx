@@ -1,7 +1,10 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import './About.css';
-import bhuwanImg from '../assets/bhuwan.jpeg';
-import cvPdf from '../assets/CV.pdf';
+
+const bhuwanImg = '/bhuwan.jpeg';
+const cvPdf = '/CV.pdf';
 
 const stats = [
   { num: 8, label: 'Featured Projects' },

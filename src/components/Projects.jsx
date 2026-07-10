@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import useMagnetic from '../hooks/useMagnetic';
 import useTilt from '../hooks/useTilt';

@@ -1,3 +1,5 @@
+'use client';
+
 import './Experience.css';
 
 const items = [

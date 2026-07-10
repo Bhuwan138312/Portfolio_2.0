@@ -12,14 +12,14 @@ const bars = [
 ];
 
 const tags = [
-  { label: 'Java', icon: 'java' },
+  { label: 'Java', icon: 'openjdk' },
   { label: 'Spring', icon: 'spring' },
   { label: 'Spring Boot', icon: 'springboot' },
   { label: 'Python', icon: 'python' },
   { label: 'FastAPI', icon: 'fastapi' },
   { label: 'Django', icon: 'django' },
   { label: 'HTML5', icon: 'html5' },
-  { label: 'CSS3', icon: 'css3' },
+  { label: 'CSS3', icon: 'css' },
   { label: 'JavaScript', icon: 'javascript' },
   { label: 'React', icon: 'react' },
   { label: 'MySQL', icon: 'mysql' },
@@ -41,13 +41,14 @@ function SkillBar({ label, pct, index }) {
   const rafRef = useRef(null);
 
   useEffect(() => {
+    let timer;
     const obs = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
       obs.disconnect();
 
       const delay = index * 140; // stagger each bar
 
-      setTimeout(() => {
+      timer = setTimeout(() => {
         const fill = fillRef.current;
         const counter = countRef.current;
         if (!fill) return;
@@ -76,6 +77,7 @@ function SkillBar({ label, pct, index }) {
     return () => {
       obs.disconnect();
       cancelAnimationFrame(rafRef.current);
+      if (timer) clearTimeout(timer);
     };
   }, [pct, index]);
 
@@ -114,7 +116,8 @@ export default function Skills() {
                   {t.icon && (
                     <img
                       src={`https://cdn.simpleicons.org/${t.icon}`}
-                      alt={t.label}
+                      alt=""
+                      aria-hidden="true"
                       className="skill-tag-icon"
                     />
                   )}

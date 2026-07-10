@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import './About.css';
 import WordReveal from './WordReveal';
 
 const bhuwanImg = '/bhuwan.jpeg';
+const bhuwan2Img = '/bhuwan2.jpeg';
 const cvPdf = '/CV.pdf';
 
 const stats = [
@@ -45,15 +47,71 @@ function StatItem({ num, label }) {
 }
 
 export default function About() {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const [hasDiscovered, setHasDiscovered] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const flipTimerRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+    flipTimerRef.current = setTimeout(() => {
+      setIsFlipped(true);
+      setHasDiscovered((prev) => {
+        if (!prev) setShowEasterEgg(true);
+        return true;
+      });
+    }, 2150);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    if (flipTimerRef.current) {
+      clearTimeout(flipTimerRef.current);
+    }
+    setIsFlipped(false);
+    setShowEasterEgg(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (flipTimerRef.current) clearTimeout(flipTimerRef.current);
+    };
+  }, []);
+
   return (
     <section id="about" className="section">
       <div className="container">
         <span className="section-tag reveal-fade">About Me</span>
         <div className="about-grid">
           <div className="about-photo-col reveal-left">
-            <div className="photo-frame">
-              <img src={bhuwanImg} alt="Bhuwan Shrestha" className="profile-photo" />
-              <div className="photo-deco" />
+            <div 
+              className="photo-frame" 
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              {showEasterEgg && (
+                <div className="easter-egg-popup">
+                  🎉 Easter Egg Discovered!
+                </div>
+              )}
+              <div className={`liquid-circle ${isFlipped ? 'hide-circle' : ''}`}>
+                <div className={`liquid-water ${isHovering ? 'filling' : ''}`}>
+                  <svg className="liquid-wave" viewBox="0 0 200 30" preserveAspectRatio="none">
+                    <path d="M 0 10 Q 25 0 50 10 T 100 10 T 150 10 T 200 10 L 200 30 L 0 30 Z" />
+                  </svg>
+                </div>
+              </div>
+              <div className={`photo-flip-inner ${isFlipped ? 'is-flipped' : ''}`}>
+                <div className="photo-front">
+                  <Image src={bhuwanImg} alt="Bhuwan Shrestha" className="profile-photo" width={600} height={600} priority />
+                  <div className="photo-deco" />
+                </div>
+                <div className="photo-back">
+                  <Image src={bhuwan2Img} alt="Bhuwan Shrestha Alternate" className="profile-photo" width={600} height={600} />
+                  <div className="photo-deco" />
+                </div>
+              </div>
             </div>
             <div className="availability-badge">
               <span className="badge-dot" />

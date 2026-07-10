@@ -32,11 +32,11 @@ const items = [
 
 export default function Experience() {
   const containerRef = useRef(null);
-  const [progress, setProgress] = useState(0);
-  const [lineDistance, setLineDistance] = useState(0);
-  const [dotOffsets, setDotOffsets] = useState([]);
+  const dotOffsetsRef = useRef([]);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
@@ -45,25 +45,47 @@ export default function Experience() {
       const distance = triggerPoint - rect.top;
       const p = Math.max(0, Math.min(1, distance / rect.height));
       
-      setProgress(p);
-      setLineDistance(distance);
+      containerRef.current.style.setProperty('--progress', p);
+
+      const itemsDOM = containerRef.current.querySelectorAll('.timeline-item');
+      itemsDOM.forEach((itemNode, index) => {
+        const offset = dotOffsetsRef.current[index];
+        const isRevealed = offset !== undefined && distance >= offset + 12;
+        const dot = itemNode.querySelector('.timeline-dot');
+        
+        if (isRevealed) {
+          itemNode.classList.add('revealed');
+          if (dot) dot.classList.add('active');
+        } else {
+          itemNode.classList.remove('revealed');
+          if (dot) dot.classList.remove('active');
+        }
+      });
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     const updateOffsets = () => {
       if (!containerRef.current) return;
-      const items = containerRef.current.querySelectorAll('.timeline-item');
-      // Calculate each item's top position relative to the container
-      const offsets = Array.from(items).map(item => item.offsetTop);
-      setDotOffsets(offsets);
-      handleScroll(); // Evaluate immediately based on new offsets
+      const itemsDOM = containerRef.current.querySelectorAll('.timeline-item');
+      dotOffsetsRef.current = Array.from(itemsDOM).map(item => item.offsetTop);
+      handleScroll(); 
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', updateOffsets);
     updateOffsets(); // Initial calculation
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', updateOffsets);
     };
   }, []);
@@ -73,14 +95,10 @@ export default function Experience() {
       <div className="container">
         <span className="section-tag reveal-fade">My Background</span>
         <h2 className="section-title reveal-up">Education</h2>
-        <div className="timeline" ref={containerRef} style={{ '--progress': progress }}>
-          {items.map((item, i) => {
-            // First item always revealed, others revealed exactly when line passes their dot
-            const isRevealed = dotOffsets[i] !== undefined && lineDistance >= dotOffsets[i] + 12;
-            
-            return (
-            <div className={`timeline-item scroll-reveal-item ${isRevealed ? 'revealed' : ''}`} key={i}>
-              <div className={`timeline-dot ${item.type} ${isRevealed ? 'active' : ''}`} />
+        <div className="timeline" ref={containerRef} style={{ '--progress': 0 }}>
+          {items.map((item) => (
+            <div className="timeline-item scroll-reveal-item" key={`${item.company}-${item.role}`}>
+              <div className={`timeline-dot ${item.type}`} />
               <div className="timeline-content">
                 <span className="timeline-period">{item.period}</span>
                 <h3 className="timeline-role">{item.role}</h3>
@@ -91,8 +109,7 @@ export default function Experience() {
                 </div>
               </div>
             </div>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>

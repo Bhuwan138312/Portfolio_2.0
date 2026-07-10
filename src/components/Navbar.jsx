@@ -15,8 +15,8 @@ const overlapFraction = (pillLeft, pillWidth, lLeft, lWidth) => {
 export default function Navbar() {
   const [scrolled, setScrolled]        = useState(false);
   const [open, setOpen]                = useState(false);
-  const [pill, setPill]                = useState({ left: 0, width: 0, opacity: 0 });
   const progressBarRef                 = useRef(null);
+  const pillDOMRef                     = useRef(null);
 
   const navLinksRef   = useRef(null);
   const linkRefs      = useRef({});
@@ -98,7 +98,36 @@ export default function Navbar() {
       cur.width   += (tgt.width   - cur.width)   * LERP;
       cur.opacity += (tgt.opacity - cur.opacity) * LERP;
 
-      setPill({ left: cur.left, width: cur.width, opacity: cur.opacity });
+      if (pillDOMRef.current) {
+        pillDOMRef.current.style.left = `${cur.left}px`;
+        pillDOMRef.current.style.width = `${cur.width}px`;
+        pillDOMRef.current.style.opacity = cur.opacity;
+      }
+
+      links.forEach(l => {
+        const id = l.toLowerCase();
+        const el = linkRefs.current[id];
+        const idx = links.findIndex(x => x.toLowerCase() === id);
+        const positions = pillPositions.current;
+        
+        if (!el) return;
+        
+        if (idx < 0 || !positions[idx] || cur.opacity < 0.05) {
+          el.style.transform = '';
+          el.style.color = '';
+          el.style.fontWeight = '';
+          return;
+        }
+        
+        const { left: lLeft, width: lWidth } = positions[idx];
+        const ov = overlapFraction(cur.left, cur.width, lLeft, lWidth);
+        const scale = 1 + ov * 0.18;
+        
+        el.style.transform = `scale(${scale})`;
+        el.style.color = ov > 0.05 ? `hsl(145,${Math.round(ov * 42)}%,${Math.round(44 - ov * 8)}%)` : '';
+        el.style.fontWeight = ov > 0.45 ? '600' : '500';
+      });
+
       rafRef.current = requestAnimationFrame(loop);
     };
     rafRef.current = requestAnimationFrame(loop);
@@ -136,23 +165,6 @@ export default function Navbar() {
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  /* ── per-link magnify scale from overlap ─── */
-  const getLinkStyle = (linkId) => {
-    const positions = pillPositions.current;
-    if (!positions.length || pill.opacity < 0.05) return {};
-    const idx = links.findIndex(l => l.toLowerCase() === linkId);
-    if (idx < 0 || !positions[idx]) return {};
-    const { left: lLeft, width: lWidth } = positions[idx];
-    const ov = overlapFraction(pill.left, pill.width, lLeft, lWidth);
-    const scale = 1 + ov * 0.18;
-    return {
-      transform:  `scale(${scale})`,
-      color:      ov > 0.05
-        ? `hsl(145,${Math.round(ov * 42)}%,${Math.round(44 - ov * 8)}%)`
-        : undefined,
-      fontWeight: ov > 0.45 ? 600 : 500,
-    };
-  };
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -167,14 +179,14 @@ export default function Navbar() {
           <ul className={`nav-links ${open ? 'mobile-open' : ''}`} ref={navLinksRef}>
             <div
               className="nav-pill"
-              style={{ left: pill.left, width: pill.width, opacity: pill.opacity }}
+              ref={pillDOMRef}
+              style={{ left: 0, width: 0, opacity: 0 }}
             />
             {links.map((l) => (
               <li key={l}>
                 <a
                   href={`#${l.toLowerCase()}`}
                   ref={el => { linkRefs.current[l.toLowerCase()] = el; }}
-                  style={getLinkStyle(l.toLowerCase())}
                   onClick={(e) => handleClick(e, `#${l.toLowerCase()}`)}
                 >
                   {l}

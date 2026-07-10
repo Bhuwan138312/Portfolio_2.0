@@ -136,7 +136,7 @@ export default function Contact() {
           Have a project in mind? I'd love to hear about it. Drop me a message and I'll get back within 24 hours.
         </p>
         <div className="contact-grid">
-          <form className="contact-form reveal-left" onSubmit={onSubmit} noValidate>
+          <form className="contact-form reveal-left" style={{ transitionDuration: '3.5s' }} onSubmit={onSubmit} noValidate>
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input id="name" name="name" type="text" value={form.name} onChange={handle} placeholder="Your full name" />
@@ -169,7 +169,7 @@ export default function Contact() {
             </button>
           </form>
 
-          <div className="contact-info reveal-right">
+          <div className="contact-info reveal-right" style={{ transitionDuration: '3.5s' }}>
             <div className="info-card">
               <span className="info-icon">📍</span>
               <div><strong>Location</strong><p>Kathmandu, Nepal</p></div>

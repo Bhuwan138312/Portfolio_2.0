@@ -314,7 +314,6 @@ export default function Hero() {
             href="#projects"
             className="btn btn-primary"
             style={{ willChange: 'transform', display: 'inline-flex' }}
-            onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }}
           >
             View My Work ↓
           </a>
@@ -324,7 +323,6 @@ export default function Hero() {
             href="#contact"
             className="btn btn-ghost"
             style={{ willChange: 'transform', display: 'inline-flex' }}
-            onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
           >
             Get In Touch
           </a>

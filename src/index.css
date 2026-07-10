@@ -231,13 +231,38 @@ button {
 
 .stagger-item {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: scale(0.9) translateY(20px);
+  transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .stagger-item.visible {
   opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* ── Word Reveal ───────────────────────────────── */
+.word-reveal {
+  /* Wrapper can remain as is */
+}
+
+.word-token {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.word-token__inner {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+  will-change: transform, opacity;
+}
+
+.word-reveal--visible .word-token__inner {
   transform: translateY(0);
+  opacity: 1;
 }
 
 /* ── Shared Layout ─────────────────────────────── */

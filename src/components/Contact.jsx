@@ -98,10 +98,10 @@ function MagneticSocial({ href, ariaLabel, children }) {
 
 /* ── Contact section ─────────────────────────────────────── */
 export default function Contact() {
-  const [form, setForm]           = useState({ name: '', email: '', message: '' });
-  const [msgBox, setMsgBox]       = useState(null); // 'success' | 'error' | null
-  const [state, handleSubmit]     = useForm('xnjqyknw');
-  const magSubmit                 = useMagnetic(0.25);
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [msgBox, setMsgBox] = useState(null); // 'success' | 'error' | null
+  const [state, handleSubmit] = useForm('xnjqyknw');
+  const magSubmit = useMagnetic(0.25);
 
   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 

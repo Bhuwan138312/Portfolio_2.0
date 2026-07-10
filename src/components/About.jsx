@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import './About.css';
+import WordReveal from './WordReveal';
 
 const bhuwanImg = '/bhuwan.jpeg';
 const cvPdf = '/CV.pdf';
@@ -60,17 +61,21 @@ export default function About() {
             </div>
           </div>
 
-          <div className="about-text-col reveal-right">
-            <h2 className="about-heading">
+          <div className="about-text-col">
+            <h2 className="about-heading reveal-right">
               Building <em>reliable</em> backends,<br />
               engineering <em>real solutions</em>.
             </h2>
-            <p>I'm <strong>Bhuwan Shrestha</strong>, a backend developer based in <strong>Kathmandu, Nepal</strong> with a primary focus on <strong>Java, Spring &amp; Spring Boot</strong> and <strong>Python</strong> and its ecosystem of libraries.</p>
-            <p>I build scalable REST APIs, microservices, and data-driven systems. I also work across the stack with HTML, CSS, React, and JavaScript, and manage deployments with Docker, Git, and GitHub.</p>
-            <div className="about-stats">
+            <WordReveal startDelay={200} wordDelay={30}>
+              I'm <strong>Bhuwan Shrestha</strong>, a backend developer based in <strong>Kathmandu, Nepal</strong> with a primary focus on <strong>Java, Spring &amp; Spring Boot</strong> and <strong>Python</strong> and its ecosystem of libraries.
+            </WordReveal>
+            <WordReveal startDelay={400} wordDelay={30}>
+              I build scalable REST APIs, microservices, and data-driven systems. I also work across the stack with HTML, CSS, React, and JavaScript, and manage deployments with Docker, Git, and GitHub.
+            </WordReveal>
+            <div className="about-stats reveal-up" style={{ transitionDelay: '500ms' }}>
               {stats.map((s) => <StatItem key={s.label} {...s} />)}
             </div>
-            <a href={cvPdf} target="_blank" rel="noopener noreferrer" className="btn btn-primary">View CV ↗</a>
+            <a href={cvPdf} target="_blank" rel="noopener noreferrer" className="btn btn-primary reveal-up" style={{ transitionDelay: '600ms' }}>View CV ↗</a>
           </div>
         </div>
       </div>

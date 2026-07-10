@@ -4,7 +4,11 @@
   gap: 5rem;
   align-items: start;
 }
-.skill-item { margin-bottom: 1.6rem; }
+
+.skill-item {
+  margin-bottom: 1.6rem;
+}
+
 .skill-meta {
   display: flex;
   justify-content: space-between;
@@ -13,13 +17,19 @@
   color: var(--text);
   margin-bottom: 8px;
 }
-.skill-pct { color: var(--accent); font-weight: 600; }
+
+.skill-pct {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .skill-bar {
   height: 8px;
   background: var(--border);
   border-radius: 4px;
   overflow: hidden;
 }
+
 .skill-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--accent) 0%, #6C8EBF 100%);
@@ -31,21 +41,29 @@
 
 /* ── Shimmer sweep on entry ──────────────────────────── */
 @keyframes shimmer-sweep {
-  0%   { transform: translateX(-200%); opacity: 0.8; }
-  60%  { opacity: 1; }
-  100% { transform: translateX(400%);  opacity: 0; }
+  0% {
+    transform: translateX(-200%);
+    opacity: 0.8;
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
 }
 
 .skill-fill.animate::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.45) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.45) 50%,
+      transparent 100%);
   border-radius: inherit;
   animation: shimmer-sweep 1.1s ease 0.2s forwards;
 }
@@ -60,13 +78,17 @@
   color: var(--text-muted);
   margin-bottom: 1rem;
 }
+
 .skill-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .skill-tag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 7px 16px;
   border-radius: var(--radius-full);
   font-size: 0.82rem;
@@ -77,13 +99,28 @@
   cursor: default;
   transition: border-color var(--transition), color var(--transition), transform var(--transition), background var(--transition);
 }
+
+.skill-tag-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  transition: transform var(--transition);
+}
+
 .skill-tag:hover {
   border-color: var(--accent);
   color: var(--accent);
-  background: rgba(124,152,133,0.06);
+  background: rgba(124, 152, 133, 0.06);
   transform: translateY(-2px);
 }
 
+.skill-tag:hover .skill-tag-icon {
+  transform: scale(1.15);
+}
+
 @media (max-width: 768px) {
-  .skills-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .skills-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
 }

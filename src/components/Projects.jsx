@@ -125,7 +125,9 @@ export default function Projects() {
 
         <div className="projects-grid">
           {projects.slice(0, 6).map((p) => (
-            <ProjectCard key={p.title} p={p} className="stagger-item" />
+            <div key={p.title} className="stagger-item">
+              <ProjectCard p={p} />
+            </div>
           ))}
         </div>
 
@@ -133,7 +135,9 @@ export default function Projects() {
           <div className="projects-more-inner">
             <div className="projects-grid" style={{ paddingTop: '1.75rem' }}>
               {projects.slice(6).map((p) => (
-                <ProjectCard key={p.title} p={p} className="stagger-item visible" />
+                <div key={p.title} className="stagger-item visible">
+                  <ProjectCard p={p} />
+                </div>
               ))}
             </div>
           </div>

@@ -9,14 +9,39 @@
   top: 8px;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(to bottom, var(--accent), var(--accent-2), transparent);
-  opacity: 0.3;
+  background: var(--border);
+  opacity: 0.5;
+}
+
+.timeline::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 8px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+  transform-origin: top;
+  transform: scaleY(var(--progress, 0));
+  transition: transform 0.1s linear;
 }
 .timeline-item {
   display: flex;
   gap: 2rem;
   margin-bottom: 2.5rem;
   position: relative;
+}
+
+.scroll-reveal-item {
+  opacity: 0;
+  transform: scale(0.92) translateY(30px);
+  transition: opacity 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.scroll-reveal-item.revealed {
+  opacity: 1;
+  transform: scale(1) translateY(0);
 }
 .timeline-dot {
   flex-shrink: 0;
@@ -29,24 +54,33 @@
   z-index: 1;
   margin-top: 2px;
 }
-.timeline-dot.work {
-  background: rgba(124,152,133,0.15);
-  border: 2.5px solid var(--accent);
+.timeline-dot {
+  background: var(--bg-alt);
+  border: 2.5px solid var(--border);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
-.timeline-dot.work::after {
+.timeline-dot::after {
   content: '';
   width: 10px; height: 10px;
   border-radius: 50%;
+  background: var(--border);
+  transition: background 0.4s ease;
+}
+
+/* Active states (when tracker line touches them) */
+.timeline-dot.work.active {
+  background: rgba(124,152,133,0.15);
+  border-color: var(--accent);
+}
+.timeline-dot.work.active::after {
   background: var(--accent);
 }
-.timeline-dot.edu {
+
+.timeline-dot.edu.active {
   background: rgba(108,142,191,0.15);
-  border: 2.5px solid var(--accent-2);
+  border-color: var(--accent-2);
 }
-.timeline-dot.edu::after {
-  content: '';
-  width: 10px; height: 10px;
-  border-radius: 50%;
+.timeline-dot.edu.active::after {
   background: var(--accent-2);
 }
 

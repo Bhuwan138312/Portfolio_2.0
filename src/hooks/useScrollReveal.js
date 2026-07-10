@@ -26,7 +26,7 @@ export default function useScrollReveal() {
           if (entry.isIntersecting) {
             const siblings = entry.target.parentElement.querySelectorAll('.stagger-item');
             siblings.forEach((el, i) => {
-              setTimeout(() => el.classList.add('visible'), i * 110);
+              setTimeout(() => el.classList.add('visible'), i * 200);
             });
             staggerObserver.unobserve(entry.target.parentElement.querySelector('.stagger-item'));
           }

@@ -4,25 +4,41 @@ import { useEffect, useRef } from 'react';
 import './Skills.css';
 
 const bars = [
-  { label: 'Java / Spring Boot',   pct: 90 },
-  { label: 'Python & Libraries',   pct: 85 },
-  { label: 'MySQL / MongoDB',       pct: 82 },
-  { label: 'HTML / CSS / React',    pct: 75 },
+  { label: 'Java / Spring Boot', pct: 90 },
+  { label: 'Python & Libraries', pct: 85 },
+  { label: 'MySQL / MongoDB', pct: 82 },
+  { label: 'HTML / CSS / React', pct: 75 },
   { label: 'Docker / Git / GitHub', pct: 78 },
 ];
 
 const tags = [
-  'Java','Spring','Spring Boot','Python','FastAPI','Django',
-  'HTML5','CSS3','JavaScript','React',
-  'MySQL','MongoDB','NoSQL','PostgreSQL',
-  'REST APIs','Microservices',
-  'Docker','Git','GitHub','Figma','Kotlin',
+  { label: 'Java', icon: 'java' },
+  { label: 'Spring', icon: 'spring' },
+  { label: 'Spring Boot', icon: 'springboot' },
+  { label: 'Python', icon: 'python' },
+  { label: 'FastAPI', icon: 'fastapi' },
+  { label: 'Django', icon: 'django' },
+  { label: 'HTML5', icon: 'html5' },
+  { label: 'CSS3', icon: 'css3' },
+  { label: 'JavaScript', icon: 'javascript' },
+  { label: 'React', icon: 'react' },
+  { label: 'MySQL', icon: 'mysql' },
+  { label: 'MongoDB', icon: 'mongodb' },
+  { label: 'NoSQL', icon: '' },
+  { label: 'PostgreSQL', icon: 'postgresql' },
+  { label: 'REST APIs', icon: '' },
+  { label: 'Microservices', icon: '' },
+  { label: 'Docker', icon: 'docker' },
+  { label: 'Git', icon: 'git' },
+  { label: 'GitHub', icon: 'github' },
+  { label: 'Figma', icon: 'figma' },
+  { label: 'Kotlin', icon: 'kotlin' },
 ];
 
 function SkillBar({ label, pct, index }) {
-  const fillRef  = useRef(null);
+  const fillRef = useRef(null);
   const countRef = useRef(null);
-  const rafRef   = useRef(null);
+  const rafRef = useRef(null);
 
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => {
@@ -43,11 +59,11 @@ function SkillBar({ label, pct, index }) {
 
         // 3. Animate the percentage counter with easeOutCubic
         const duration = 1200;
-        const start    = performance.now();
+        const start = performance.now();
 
         const step = (now) => {
-          const t        = Math.min((now - start) / duration, 1);
-          const eased    = 1 - Math.pow(1 - t, 3);
+          const t = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
           if (counter) counter.textContent = `${Math.round(eased * pct)}%`;
           if (t < 1) rafRef.current = requestAnimationFrame(step);
         };
@@ -92,10 +108,17 @@ export default function Skills() {
               {tags.map((t, i) => (
                 <span
                   className="skill-tag stagger-item"
-                  key={t}
+                  key={t.label}
                   style={{ transitionDelay: `${i * 60}ms` }}
                 >
-                  {t}
+                  {t.icon && (
+                    <img
+                      src={`https://cdn.simpleicons.org/${t.icon}`}
+                      alt={t.label}
+                      className="skill-tag-icon"
+                    />
+                  )}
+                  {t.label}
                 </span>
               ))}
             </div>

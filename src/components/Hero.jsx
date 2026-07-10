@@ -53,6 +53,12 @@ export default function Hero() {
     let prevMouse = null;
     let lastEmit = 0;
 
+    // Framerate independence
+    let simTime = performance.now();
+    let lastTime = performance.now();
+    let accumulator = 0;
+    const SIMULATION_STEP = 1000 / 144; // Target 144Hz physics
+
     /* ── build dot grid ────────────────────────── */
     const buildGrid = () => {
       dots = [];
@@ -92,19 +98,23 @@ export default function Hero() {
       if (trail.length > TRAIL_MAX) trail.shift();
 
       if (prevMouse) {
-        const speed = Math.hypot(nx - prevMouse.x, ny - prevMouse.y);
-        if (speed > 2 && now - lastEmit > EMIT_MS) {
+        const dist = Math.hypot(nx - prevMouse.x, ny - prevMouse.y);
+        const dt = Math.max(1, now - prevMouse.t);
+        // Normalize speed to 144Hz equivalent (where dt is approx 6.94ms)
+        const normalizedSpeed = (dist / dt) * (1000 / 144);
+
+        if (normalizedSpeed > 2 && now - lastEmit > EMIT_MS) {
           if (ripples.length >= MAX_RIPPLES) ripples.shift();
           ripples.push({
             x: (prevMouse.x + nx) * 0.5,
             y: (prevMouse.y + ny) * 0.5,
             t: now,
-            strength: Math.min(speed / 18, 1),
+            strength: Math.min(normalizedSpeed / 18, 1),
           });
           lastEmit = now;
         }
       }
-      prevMouse = { x: nx, y: ny };
+      prevMouse = { x: nx, y: ny, t: now };
       mouseRef.current = { x: nx, y: ny };
     };
 
@@ -136,11 +146,21 @@ export default function Hero() {
     const draw = (ts) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const now = ts;
+
+      let frameTime = now - lastTime;
+      lastTime = now;
+      if (frameTime > 100) {
+        // Tab was likely inactive. Advance simTime to catch up without spiraling.
+        simTime += (frameTime - 100);
+        frameTime = 100;
+      }
+      accumulator += frameTime;
+
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
 
-      // expire old ripples
-      ripples = ripples.filter(r => now - r.t < 3800);
+      // expire old ripples (using simTime)
+      ripples = ripples.filter(r => simTime - r.t < 3800);
 
       /* ── fading cursor trail ─────────────────── */
       for (let i = 1; i < trail.length; i++) {
@@ -157,68 +177,80 @@ export default function Hero() {
         ctx.stroke();
       }
 
-      /* ── update + draw dots ──────────────────── */
+      /* ── update physics (fixed timestep) ─────── */
+      while (accumulator >= SIMULATION_STEP) {
+        simTime += SIMULATION_STEP;
+
+        for (const d of dots) {
+          /* wave target offset from all ripples */
+          let wox = 0, woy = 0;
+          for (const rip of ripples) {
+            const age = (simTime - rip.t) / 1000;
+            if (age < 0) continue;
+            const r = Math.hypot(d.ox - rip.x, d.oy - rip.y);
+            if (r < 1) continue;
+            const wavefront = WAVE_SPEED * age;
+            const dr = r - wavefront;
+            const envelope = Math.exp(-0.5 * (dr / WAVE_LEN) ** 2);
+            if (envelope < 0.008) continue;
+            const amp = WAVE_AMP * rip.strength * Math.exp(-WAVE_DECAY * age) * envelope;
+            const phase = Math.sin(WAVE_K * dr);
+            const disp = amp * phase;
+            wox += (d.ox - rip.x) / r * disp;
+            woy += (d.oy - rip.y) / r * disp;
+          }
+
+          /* direct cursor stick push */
+          const floatX = Math.sin(simTime * d.phaseSpeed + d.phase) * 3;
+          const floatY = Math.cos(simTime * d.phaseSpeed + d.phase) * 3;
+
+          let tx = d.ox + wox + floatX;
+          let ty = d.oy + woy + floatY;
+          const cdx = d.ox - mx;
+          const cdy = d.oy - my;
+          const cdist = Math.hypot(cdx, cdy);
+          if (cdist < PUSH_R && cdist > 0.5) {
+            const t = 1 - cdist / PUSH_R;
+            const smooth = t * t * (3 - 2 * t);
+            const push = smooth * PUSH_FORCE;
+            const ang = Math.atan2(cdy, cdx);
+            tx += Math.cos(ang) * push;
+            ty += Math.sin(ang) * push;
+          }
+
+          /* spring integration */
+          d.vx = (d.vx + (tx - d.x) * SPRING) * DAMPING;
+          d.vy = (d.vy + (ty - d.y) * SPRING) * DAMPING;
+          d.x += d.vx;
+          d.y += d.vy;
+
+          // Store these for the draw loop
+          d.floatX = floatX;
+          d.floatY = floatY;
+        }
+
+        accumulator -= SIMULATION_STEP;
+      }
+
+      /* ── draw dots ───────────────────────────── */
       for (const d of dots) {
-        /* wave target offset from all ripples */
-        let wox = 0, woy = 0;
-        for (const rip of ripples) {
-          const age = (now - rip.t) / 1000;
-          const r = Math.hypot(d.ox - rip.x, d.oy - rip.y);
-          if (r < 1) continue;
-          const wavefront = WAVE_SPEED * age;
-          const dr = r - wavefront;
-          const envelope = Math.exp(-0.5 * (dr / WAVE_LEN) ** 2);
-          if (envelope < 0.008) continue;
-          const amp = WAVE_AMP * rip.strength * Math.exp(-WAVE_DECAY * age) * envelope;
-          const phase = Math.sin(WAVE_K * dr);
-          const disp = amp * phase;
-          wox += (d.ox - rip.x) / r * disp;
-          woy += (d.oy - rip.y) / r * disp;
-        }
-
-        /* direct cursor stick push */
-        // Add a continuous organic float using the stored phase
-        const floatX = Math.sin(now * d.phaseSpeed + d.phase) * 3;
-        const floatY = Math.cos(now * d.phaseSpeed + d.phase) * 3;
-
-        let tx = d.ox + wox + floatX;
-        let ty = d.oy + woy + floatY;
-        const cdx = d.ox - mx;
-        const cdy = d.oy - my;
-        const cdist = Math.hypot(cdx, cdy);
-        if (cdist < PUSH_R && cdist > 0.5) {
-          const t = 1 - cdist / PUSH_R;
-          const smooth = t * t * (3 - 2 * t);
-          const push = smooth * PUSH_FORCE;
-          const ang = Math.atan2(cdy, cdx);
-          tx += Math.cos(ang) * push;
-          ty += Math.sin(ang) * push;
-        }
-
-        /* spring integration */
-        d.vx = (d.vx + (tx - d.x) * SPRING) * DAMPING;
-        d.vy = (d.vy + (ty - d.y) * SPRING) * DAMPING;
-        d.x += d.vx;
-        d.y += d.vy;
-
-        /* visuals — energy drives color + size */
         // Subtract float to calculate energy only from mouse/wave interaction
-        const dispX = (d.x - d.ox) - floatX;
-        const dispY = (d.y - d.oy) - floatY;
+        const dispX = (d.x - d.ox) - (d.floatX || 0);
+        const dispY = (d.y - d.oy) - (d.floatY || 0);
         const disp2 = Math.hypot(dispX, dispY);
 
         const energy = Math.min(disp2 / (PUSH_FORCE * 0.9), 1);
         const curDist = Math.hypot(d.x - mx, d.y - my);
         const prox = Math.max(0, 1 - curDist / (PUSH_R * 1.6));
 
-        const alpha = energy * 0.55 + prox * 0.08;
+        // Adjusted brightness/intensity (reduced by 5%)
+        const alpha = energy * 0.50 + prox * 0.095;
 
-        // Skip drawing if completely invisible
         if (alpha > 0.01) {
-          const radius = BASE_R + energy * 3.8;
+          const radius = BASE_R + energy * 2.75;
           const hue = 148 + energy * 38;
-          const sat = 5 + energy * 68 + prox * 10;
-          const light = 54 + energy * 24;
+          const sat = 22 + energy * 33 + prox * 10;
+          const light = 40 + energy * 9;
 
           ctx.beginPath();
           ctx.arc(d.x, d.y, radius, 0, Math.PI * 2);

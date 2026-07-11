@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import './About.css';
 import WordReveal from './WordReveal';
+import { playPopSound, playWhooshSound, playWaterFillSound } from '../utils/sound';
 
 const bhuwanImg = '/bhuwan.jpeg';
 const bhuwan2Img = '/bhuwan2.jpeg';
@@ -52,11 +53,24 @@ export default function About() {
   const [hasDiscovered, setHasDiscovered] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const flipTimerRef = useRef(null);
+  const popTimerRef = useRef(null);
+  const fillSoundRef = useRef(null);
 
   const handleMouseEnter = () => {
     setIsHovering(true);
+    
+    // Start water fill sound
+    fillSoundRef.current = playWaterFillSound(2000);
+    
+    // Water hits the top
+    popTimerRef.current = setTimeout(() => {
+      playPopSound();
+    }, 2000);
+
+    // Card flips
     flipTimerRef.current = setTimeout(() => {
       setIsFlipped(true);
+      playWhooshSound();
       setHasDiscovered((prev) => {
         if (!prev) setShowEasterEgg(true);
         return true;
@@ -66,8 +80,14 @@ export default function About() {
 
   const handleMouseLeave = () => {
     setIsHovering(false);
-    if (flipTimerRef.current) {
-      clearTimeout(flipTimerRef.current);
+    if (flipTimerRef.current) clearTimeout(flipTimerRef.current);
+    if (popTimerRef.current) clearTimeout(popTimerRef.current);
+    if (fillSoundRef.current) {
+      fillSoundRef.current.stop();
+      fillSoundRef.current = null;
+    }
+    if (isFlipped) {
+      playWhooshSound();
     }
     setIsFlipped(false);
     setShowEasterEgg(false);
@@ -76,6 +96,8 @@ export default function About() {
   useEffect(() => {
     return () => {
       if (flipTimerRef.current) clearTimeout(flipTimerRef.current);
+      if (popTimerRef.current) clearTimeout(popTimerRef.current);
+      if (fillSoundRef.current) fillSoundRef.current.stop();
     };
   }, []);
 
@@ -105,12 +127,15 @@ export default function About() {
               <div className={`photo-flip-inner ${isFlipped ? 'is-flipped' : ''}`}>
                 <div className="photo-front">
                   <Image src={bhuwanImg} alt="Bhuwan Shrestha" className="profile-photo" width={600} height={600} priority />
-                  <div className="photo-deco" />
                 </div>
-                <div className="photo-back">
-                  <Image src={bhuwan2Img} alt="Bhuwan Shrestha Alternate" className="profile-photo" width={600} height={600} />
-                  <div className="photo-deco" />
+                <div className="photo-back quote-back">
+                  <div className="quote-content">
+                    <span className="quote-icon">"</span>
+                    <p>It works on my machine.</p>
+                    <span className="quote-author">🤷‍♂️ Every Developer</span>
+                  </div>
                 </div>
+                <div className="photo-deco" />
               </div>
             </div>
             <div className="availability-badge">

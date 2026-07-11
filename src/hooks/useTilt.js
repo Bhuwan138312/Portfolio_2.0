@@ -16,14 +16,14 @@ export default function useTilt({
   scale = 1.04,
   ease = 0.10,
 } = {}) {
-  const ref         = useRef(null);
-  const animRef     = useRef(null);
-  const hovered     = useRef(false);
+  const ref = useRef(null);
+  const animRef = useRef(null);
+  const hovered = useRef(false);
 
   // Target and current rotations + scale — all lerped independently
-  const tgt         = useRef({ rx: 0, ry: 0 });
-  const cur         = useRef({ rx: 0, ry: 0 });
-  const curScale    = useRef(1);          // lerped scale (no instant snapping)
+  const tgt = useRef({ rx: 0, ry: 0 });
+  const cur = useRef({ rx: 0, ry: 0 });
+  const curScale = useRef(1);          // lerped scale (no instant snapping)
 
   const loop = useCallback(() => {
     // Lerp rotation
@@ -53,15 +53,15 @@ export default function useTilt({
     }
 
     // Keep looping while hovered OR while still returning to rest
-    const rotDist  = Math.abs(tgt.current.rx - cur.current.rx)
-                   + Math.abs(tgt.current.ry - cur.current.ry);
+    const rotDist = Math.abs(tgt.current.rx - cur.current.rx)
+      + Math.abs(tgt.current.ry - cur.current.ry);
     const scaleDist = Math.abs(tgtScale - curScale.current);
 
     if (hovered.current || rotDist > 0.02 || scaleDist > 0.0005) {
       animRef.current = requestAnimationFrame(loop);
     } else {
       // Fully settled — snap to exact zero and stop
-      cur.current  = { rx: 0, ry: 0 };
+      cur.current = { rx: 0, ry: 0 };
       curScale.current = 1;
       if (ref.current) {
         ref.current.style.transform =
@@ -77,9 +77,9 @@ export default function useTilt({
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;   // 0 → 1
-    const y = (e.clientY - rect.top)  / rect.height;
+    const y = (e.clientY - rect.top) / rect.height;
     tgt.current.rx = -(y - 0.5) * 2 * max;
-    tgt.current.ry =  (x - 0.5) * 2 * max;
+    tgt.current.ry = (x - 0.5) * 2 * max;
   }, [max]);
 
   const onMouseEnter = useCallback((e) => {

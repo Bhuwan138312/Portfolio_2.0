@@ -51,9 +51,6 @@ export const metadata = {
       'Portfolio of Bhuwan Shrestha, a Backend Developer specializing in Java, Spring Boot, and Python.',
     images: ['https://www.bhuwanshrestha01.com.np/bhuwan.jpeg'],
   },
-  icons: {
-    icon: '/logo.png',
-  },
 };
 
 export default function RootLayout({ children }) {

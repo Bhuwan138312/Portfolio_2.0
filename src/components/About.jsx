@@ -11,7 +11,7 @@ const bhuwan2Img = '/bhuwan2.jpeg';
 const cvPdf = '/CV.pdf';
 
 const stats = [
-  { num: 8, label: 'Featured Projects' },
+  { num: 10, label: 'Projects' },
 ];
 
 function useCounter(target, trigger) {

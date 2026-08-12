@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container footer-inner">
-        <p>© 2026 <strong>Bhuwan Shrestha</strong>. Crafted with ♥ &amp; lots of coffee.</p>
+        <p>© 2026 <strong>Bhuwan Shrestha</strong></p>
         <a
           href="#hero"
           className="back-top"

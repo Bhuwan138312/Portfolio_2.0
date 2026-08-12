@@ -35,7 +35,6 @@ const tags = [
 
 function SkillBar({ label, pct, index }) {
   const fillRef = useRef(null);
-  const countRef = useRef(null);
   const rafRef = useRef(null);
 
   useEffect(() => {
@@ -48,25 +47,12 @@ function SkillBar({ label, pct, index }) {
 
       timer = setTimeout(() => {
         const fill = fillRef.current;
-        const counter = countRef.current;
         if (!fill) return;
 
         // 1. Trigger CSS fill transition
         fill.style.width = `${pct}%`;
         // 2. Add classes for shimmer + glow dot
         fill.classList.add('animate');
-
-        // 3. Animate the percentage counter with easeOutCubic
-        const duration = 1200;
-        const start = performance.now();
-
-        const step = (now) => {
-          const t = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - t, 3);
-          if (counter) counter.textContent = `${Math.round(eased * pct)}%`;
-          if (t < 1) rafRef.current = requestAnimationFrame(step);
-        };
-        rafRef.current = requestAnimationFrame(step);
       }, delay);
     }, { threshold: 0.3 });
 
@@ -83,7 +69,6 @@ function SkillBar({ label, pct, index }) {
     <div className="skill-item">
       <div className="skill-meta">
         <span>{label}</span>
-        <span className="skill-pct" ref={countRef}>0%</span>
       </div>
       <div className="skill-bar">
         <div className="skill-fill" ref={fillRef} style={{ width: 0 }} />

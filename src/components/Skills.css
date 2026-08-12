@@ -70,6 +70,10 @@
 
 
 
+.skill-tags-col {
+  margin-top: -24px;
+}
+
 .tags-label {
   font-size: 0.8rem;
   font-weight: 600;

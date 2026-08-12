@@ -112,11 +112,7 @@ export default function About() {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              {showEasterEgg && (
-                <div className="easter-egg-popup">
-                  🎉 Easter Egg Discovered!
-                </div>
-              )}
+
               <div className={`liquid-circle ${isFlipped ? 'hide-circle' : ''}`}>
                 <div className={`liquid-water ${isHovering ? 'filling' : ''}`}>
                   <svg className="liquid-wave" viewBox="0 0 200 30" preserveAspectRatio="none">
@@ -146,14 +142,14 @@ export default function About() {
 
           <div className="about-text-col">
             <h2 className="about-heading reveal-right">
-              Building <em>reliable</em> backends,<br />
-              engineering <em>real solutions</em>.
+              Crafting <em>beautiful</em> interfaces,<br />
+              engineering <em>reliable</em> backends.
             </h2>
             <WordReveal startDelay={200} wordDelay={30}>
-              I'm <strong>Bhuwan Shrestha</strong>, a backend developer based in <strong>Kathmandu, Nepal</strong> with a primary focus on <strong>Java, Spring &amp; Spring Boot</strong> and <strong>Python</strong> and its ecosystem of libraries.
+              I'm <strong>Bhuwan Shrestha</strong>, a UI/UX designer & backend developer based in <strong>Kathmandu, Nepal</strong> with a primary focus on <strong>Figma</strong> and building scalable systems with <strong>Java, Spring Boot &amp; Python</strong>.
             </WordReveal>
             <WordReveal startDelay={400} wordDelay={30}>
-              I build scalable REST APIs, microservices, and data-driven systems. I also work across the stack with HTML, CSS, React, and JavaScript, and manage deployments with Docker, Git, and GitHub.
+              I design stunning, user-centric interfaces and bring them to life using modern web technologies, while ensuring the backend architecture is robust, secure, and data-driven.
             </WordReveal>
             <div className="about-stats reveal-up" style={{ transitionDelay: '500ms' }}>
               {stats.map((s) => <StatItem key={s.label} {...s} />)}

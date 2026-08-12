@@ -11,8 +11,8 @@ export default function Hero() {
   const magPrimary = useMagnetic(0.40);
   const magGhost = useMagnetic(0.30);
   const { mode, cyclePhase, displayed, cursorPos, introText, isTyping } = useTypewriter({
-    introText: 'Backend Developer · Java · Spring Boot · Python',
-    words: ['Developer', 'Designer', 'Builder'],
+    introText: 'UI/UX Designer & Backend Developer',
+    words: ['Designer', 'Developer', 'Creator'],
     introSpeed: 55,
     backtrackSpeed: 22,
     typeSpeed: 85,
@@ -297,15 +297,14 @@ export default function Hero() {
           )}
           {mode === 'cycling' && (
             <>
-              Backend&nbsp;<span className={`typewriter-word ${cyclePhase === 'selecting' ? 'selecting-anim' : ''}`}>{displayed}</span>
+              UI/UX&nbsp;<span className={`typewriter-word ${cyclePhase === 'selecting' ? 'selecting-anim' : ''}`}>{displayed}</span>
               <span className={`typewriter-cursor${isTyping ? '' : ' blink'}`}>|</span>
-              <span className="sep">·</span>&nbsp;Java · Spring Boot · Python
+              &nbsp;&amp; Backend Developer
             </>
           )}
         </p>
         <p className="hero-tagline reveal-up" style={{ transitionDelay: '1.4s' }}>
-          I build <em>robust</em>, scalable backend systems that power great
-          digital products — clean APIs, solid architecture, real impact.
+          I’m a UI/UX designer and developer who enjoys creating <em>user-friendly interfaces</em> and building <em>reliable backend systems</em>.
         </p>
         <div className="hero-cta reveal-up" style={{ transitionDelay: '1.7s' }}>
           <a

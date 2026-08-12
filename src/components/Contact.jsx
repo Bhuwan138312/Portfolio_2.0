@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useForm, ValidationError } from '@formspree/react';
+import { sendEmail } from '../actions/sendEmail';
 import useMagnetic from '../hooks/useMagnetic';
 import './Contact.css';
 
@@ -100,20 +100,12 @@ function MagneticSocial({ href, ariaLabel, children }) {
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [msgBox, setMsgBox] = useState(null); // 'success' | 'error' | null
-  const [state, handleSubmit] = useForm('xnjqyknw');
+  const [submitting, setSubmitting] = useState(false);
   const magSubmit = useMagnetic(0.25);
 
   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Clear form on successful submission
-  useEffect(() => {
-    if (state.succeeded) {
-      setForm({ name: '', email: '', message: '' });
-      setMsgBox({ type: 'success' });
-    }
-  }, [state.succeeded]);
-
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const missed = [];
     if (!form.name.trim()) missed.push('Name');
@@ -124,7 +116,18 @@ export default function Contact() {
       setMsgBox({ type: 'error', missing: missed });
       return;
     }
-    handleSubmit(e);
+    
+    setSubmitting(true);
+    const formData = new FormData(e.target);
+    const result = await sendEmail(formData);
+    setSubmitting(false);
+
+    if (result.error) {
+      alert(result.error);
+    } else {
+      setForm({ name: '', email: '', message: '' });
+      setMsgBox({ type: 'success' });
+    }
   };
 
   return (
@@ -140,17 +143,14 @@ export default function Contact() {
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input id="name" name="name" type="text" value={form.name} onChange={handle} placeholder="Your full name" />
-              <ValidationError prefix="Name" field="name" errors={state.errors} />
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input id="email" name="email" type="email" value={form.email} onChange={handle} placeholder="your@email.com" />
-              <ValidationError prefix="Email" field="email" errors={state.errors} />
             </div>
             <div className="form-group">
               <label htmlFor="message">Message</label>
               <textarea id="message" name="message" rows={5} value={form.message} onChange={handle} placeholder="Tell me about your project..." />
-              <ValidationError prefix="Message" field="message" errors={state.errors} />
             </div>
             <button
               ref={magSubmit.ref}
@@ -158,10 +158,10 @@ export default function Contact() {
               type="submit"
               className="btn btn-primary btn-full"
               style={{ willChange: 'transform' }}
-              disabled={state.submitting}
+              disabled={submitting}
             >
-              {state.submitting ? 'Sending...' : 'Send Message'}
-              {!state.submitting && (
+              {submitting ? 'Sending...' : 'Send Message'}
+              {!submitting && (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
                 </svg>

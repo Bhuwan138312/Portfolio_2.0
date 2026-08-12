@@ -4,35 +4,33 @@ import { useEffect, useRef } from 'react';
 import './Skills.css';
 
 const bars = [
+  { label: 'Figma & UI/UX Design', pct: 92 },
   { label: 'Java / Spring Boot', pct: 90 },
-  { label: 'Python & Libraries', pct: 85 },
-  { label: 'MySQL / MongoDB', pct: 82 },
-  { label: 'HTML / CSS / React', pct: 75 },
-  { label: 'Docker / Git / GitHub', pct: 78 },
+  { label: 'Python & Backend', pct: 85 },
+  { label: 'HTML / CSS / React', pct: 80 },
+  { label: 'MySQL / Git / Docker', pct: 78 },
 ];
 
 const tags = [
+  { label: 'Figma', icon: 'figma/F24E1E' },
+  { label: 'Canva', icon: 'canva/00C4CC' },
+  { label: 'UI/UX Design', icon: '' },
   { label: 'Java', icon: 'openjdk' },
-  { label: 'Spring', icon: 'spring' },
   { label: 'Spring Boot', icon: 'springboot' },
   { label: 'Python', icon: 'python' },
   { label: 'FastAPI', icon: 'fastapi' },
-  { label: 'Django', icon: 'django' },
   { label: 'HTML5', icon: 'html5' },
   { label: 'CSS3', icon: 'css' },
   { label: 'JavaScript', icon: 'javascript' },
   { label: 'React', icon: 'react' },
   { label: 'MySQL', icon: 'mysql' },
-  { label: 'MongoDB', icon: 'mongodb' },
-  { label: 'NoSQL', icon: '' },
-  { label: 'PostgreSQL', icon: 'postgresql' },
   { label: 'REST APIs', icon: '' },
   { label: 'Microservices', icon: '' },
   { label: 'Docker', icon: 'docker' },
   { label: 'Git', icon: 'git' },
-  { label: 'GitHub', icon: 'github' },
-  { label: 'Figma', icon: 'figma' },
-  { label: 'Kotlin', icon: 'kotlin' },
+  { label: 'GitHub', icon: 'github/white' },
+  { label: 'Microsoft Office', icon: 'microsoftoffice/D83B01' },
+  { label: 'Excel & Word', icon: 'microsoftexcel/217346' },
 ];
 
 function SkillBar({ label, pct, index }) {

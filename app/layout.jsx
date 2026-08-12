@@ -2,12 +2,14 @@ import '../src/index.css';
 import '../src/App.css';
 
 export const metadata = {
-  title: 'Bhuwan Shrestha | Backend Developer',
+  title: 'Bhuwan Shrestha | UI/UX Designer & Backend Developer',
   description:
-    'Portfolio of Bhuwan Shrestha, a Backend Developer specializing in Java, Spring Boot, and Python. I build robust, scalable backend systems and clean APIs.',
+    'Portfolio of Bhuwan Shrestha, a UI/UX Designer and Backend Developer specializing in Figma, Java, Spring Boot, and Python. I build beautiful interfaces and robust backend systems.',
   keywords: [
     'Bhuwan Shrestha',
+    'UI/UX Designer',
     'Backend Developer',
+    'Figma',
     'Java',
     'Spring Boot',
     'Python',
@@ -31,24 +33,24 @@ export const metadata = {
   openGraph: {
     type: 'website',
     url: 'https://www.bhuwanshrestha01.com.np/',
-    title: 'Bhuwan Shrestha | Backend Developer',
+    title: 'Bhuwan Shrestha | UI/UX Designer & Backend Developer',
     description:
-      'Portfolio of Bhuwan Shrestha, a Backend Developer specializing in Java, Spring Boot, and Python. I build robust, scalable backend systems and clean APIs.',
+      'Portfolio of Bhuwan Shrestha, a UI/UX Designer and Backend Developer specializing in Figma, Java, Spring Boot, and Python. I build beautiful interfaces and robust backend systems.',
     images: [
       {
         url: 'https://www.bhuwanshrestha01.com.np/bhuwan.jpeg',
         width: 1200,
         height: 630,
-        alt: 'Bhuwan Shrestha - Backend Developer',
+        alt: 'Bhuwan Shrestha - UI/UX Designer & Backend Developer',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     site: 'https://www.bhuwanshrestha01.com.np/',
-    title: 'Bhuwan Shrestha | Backend Developer',
+    title: 'Bhuwan Shrestha | UI/UX Designer & Backend Developer',
     description:
-      'Portfolio of Bhuwan Shrestha, a Backend Developer specializing in Java, Spring Boot, and Python.',
+      'Portfolio of Bhuwan Shrestha, a UI/UX Designer and Backend Developer specializing in Figma, Java, Spring Boot, and Python.',
     images: ['https://www.bhuwanshrestha01.com.np/bhuwan.jpeg'],
   },
 };

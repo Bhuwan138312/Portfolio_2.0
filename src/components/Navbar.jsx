@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import './Navbar.css';
 
-const links = ['About', 'Skills', 'Projects', 'Experience', 'Contact'];
+const links = ['About', 'Skills', 'Projects', 'Education', 'Contact'];
 
 const overlapFraction = (pillLeft, pillWidth, lLeft, lWidth) => {
   const pillRight = pillLeft + pillWidth;

@@ -91,7 +91,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section id="experience" className="section section-alt">
+    <section id="education" className="section section-alt">
       <div className="container">
         <span className="section-tag reveal-fade">My Background</span>
         <h2 className="section-title reveal-up">Education</h2>

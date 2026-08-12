@@ -18,9 +18,9 @@ import edulinkHome from '../assets/Edulink-X/Home (1).png';
 import edulinkChat from '../assets/Edulink-X/Chatspace.png';
 import edulinkVideo from '../assets/Edulink-X/videobook.png';
 
-import prividHome from '../assets/privid/Home Page.png';
-import prividWallet from '../assets/privid/Wallet.png';
-import prividVerify from '../assets/privid/verifying 2.png';
+import prividHome from '../assets/PrivID/Home Page.png';
+import prividWallet from '../assets/PrivID/Wallet.png';
+import prividVerify from '../assets/PrivID/verifying 2.png';
 
 import prividDeskHome from '../assets/PrivID_Desktop/First Page.png';
 import prividDeskWallet from '../assets/PrivID_Desktop/Credentials.png';

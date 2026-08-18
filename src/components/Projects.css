@@ -12,6 +12,7 @@
     opacity: 0;
     transform: translateY(40px) scale(0.92);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -22,7 +23,8 @@
   position: relative;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  padding: 0 0 1rem 0; /* Space for shadows at bottom */
+  padding: 0 0 1rem 0;
+  /* Space for shadows at bottom */
 }
 
 .carousel-indicators {
@@ -111,7 +113,7 @@
   border-radius: 50%;
   background: var(--surface);
   border: 1px solid var(--border);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,19 +123,33 @@
   transition: all 0.3s ease;
 }
 
-.carousel-prev-btn { left: 3vw; }
-.carousel-next-btn { right: 3vw; }
+.carousel-prev-btn {
+  left: 3vw;
+}
+
+.carousel-next-btn {
+  right: 3vw;
+}
 
 .carousel-prev-btn:hover,
 .carousel-next-btn:hover {
   color: var(--accent);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
   transform: translateY(-50%) scale(1.05);
 }
 
 @media (max-width: 768px) {
-  .carousel-prev-btn { left: 10px; width: 40px; height: 40px; }
-  .carousel-next-btn { right: 10px; width: 40px; height: 40px; }
+  .carousel-prev-btn {
+    left: 10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .carousel-next-btn {
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .featured-ux-card {
@@ -224,6 +240,7 @@
   border-radius: 24px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
 }
 
 .mockup-frame img {
@@ -232,7 +249,10 @@
   display: block;
   pointer-events: none;
   background: #fff;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+
 
 .frame-0 {
   transform: translateX(-45%) scale(0.85);
@@ -280,6 +300,7 @@
   border-radius: 12px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
+  overflow: hidden;
 }
 
 .desktop-frame img {
@@ -288,7 +309,10 @@
   border-radius: 12px;
   pointer-events: none;
   background: #fff;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+
 
 .d-frame-0 {
   transform: translateY(-70px) scale(0.85);
@@ -327,6 +351,7 @@
   .desktop-visuals {
     min-height: 350px;
   }
+
   .desktop-frame {
     width: 320px;
   }
@@ -336,15 +361,18 @@
   .featured-ux-card {
     flex-direction: column;
   }
+
   .featured-visuals {
     order: -1;
     min-height: 380px;
     width: 100%;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
+
   .featured-content {
     padding: 2.5rem 2rem;
   }
+
   .featured-features {
     grid-template-columns: 1fr;
   }
@@ -409,6 +437,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1.75rem;
 }
+
 .project-card {
   background: var(--surface);
   border-radius: var(--radius-md);
@@ -567,5 +596,6 @@
 #projects {
   position: relative;
   z-index: 1;
-  padding-bottom: 60px; /* Extra room so shadows + Show Less btn don’t get clipped */
+  padding-bottom: 60px;
+  /* Extra room so shadows + Show Less btn don’t get clipped */
 }

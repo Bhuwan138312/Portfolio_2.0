@@ -7,7 +7,6 @@ import WordReveal from './WordReveal';
 import { playPopSound, playWhooshSound, playWaterFillSound } from '../utils/sound';
 
 const bhuwanImg = '/bhuwan.jpeg';
-const bhuwan2Img = '/bhuwan2.jpeg';
 const cvPdf = '/CV.pdf';
 
 const stats = [
@@ -49,8 +48,6 @@ function StatItem({ num, label }) {
 
 export default function About() {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [showEasterEgg, setShowEasterEgg] = useState(false);
-  const [hasDiscovered, setHasDiscovered] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const flipTimerRef = useRef(null);
   const popTimerRef = useRef(null);
@@ -71,10 +68,6 @@ export default function About() {
     flipTimerRef.current = setTimeout(() => {
       setIsFlipped(true);
       playWhooshSound();
-      setHasDiscovered((prev) => {
-        if (!prev) setShowEasterEgg(true);
-        return true;
-      });
     }, 2150);
   };
 
@@ -90,7 +83,6 @@ export default function About() {
       playWhooshSound();
     }
     setIsFlipped(false);
-    setShowEasterEgg(false);
   };
 
   useEffect(() => {

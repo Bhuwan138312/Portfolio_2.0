@@ -58,10 +58,10 @@ export default function About() {
 
   const handleMouseEnter = () => {
     setIsHovering(true);
-    
+
     // Start water fill sound
     fillSoundRef.current = playWaterFillSound(2000);
-    
+
     // Water hits the top
     popTimerRef.current = setTimeout(() => {
       playPopSound();
@@ -107,8 +107,8 @@ export default function About() {
         <span className="section-tag reveal-fade">About Me</span>
         <div className="about-grid">
           <div className="about-photo-col reveal-left">
-            <div 
-              className="photo-frame" 
+            <div
+              className="photo-frame"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >

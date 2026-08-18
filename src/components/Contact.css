@@ -50,7 +50,7 @@
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 152, 133, 0.12);
+  box-shadow: 0 0 0 3px rgba(57, 101, 63, 0.12);
 }
 
 .form-group input::placeholder,
@@ -142,7 +142,7 @@
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(124, 152, 133, 0.2);
+  box-shadow: 0 6px 20px rgba(57, 101, 63, 0.2);
 }
 
 @media (max-width: 768px) {
@@ -199,12 +199,12 @@
   border: 1px solid rgba(220, 100, 80, 0.25);
 }
 
-.msg-box--success { border-color: rgba(124, 152, 133, 0.35); }
-.msg-box--success::after { border-color: rgba(124, 152, 133, 0.35); }
+.msg-box--success { border-color: rgba(57, 101, 63, 0.35); }
+.msg-box--success::after { border-color: rgba(57, 101, 63, 0.35); }
 .msg-box--success .msg-box__icon {
-  background: rgba(124, 152, 133, 0.1);
+  background: rgba(57, 101, 63, 0.1);
   color: var(--accent);
-  border: 1px solid rgba(124, 152, 133, 0.25);
+  border: 1px solid rgba(57, 101, 63, 0.25);
 }
 
 .msg-box__icon {

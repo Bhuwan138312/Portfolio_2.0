@@ -152,7 +152,7 @@ const projects = [
   },
   {
     letter: 'G',
-    gradient: ['#7C9885', '#a8c5b0'],
+    gradient: ['#39653F', '#a8c5b0'],
     title: 'GoNepal',
     desc: 'Comprehensive JavaFX tourism management platform featuring destination discovery, guide booking, and a dedicated admin panel.',
     tags: ['Java', 'JavaFX', 'Desktop App'],

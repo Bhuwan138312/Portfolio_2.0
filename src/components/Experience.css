@@ -69,7 +69,7 @@
 
 /* Active states (when tracker line touches them) */
 .timeline-dot.work.active {
-  background: rgba(124,152,133,0.15);
+  background: rgba(57, 101, 63,0.15);
   border-color: var(--accent);
 }
 .timeline-dot.work.active::after {

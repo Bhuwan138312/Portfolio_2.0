@@ -17,7 +17,7 @@
   font-weight: 600;
   color: var(--accent);
   padding: 6px 16px;
-  border: 1px solid rgba(124,152,133,0.3);
+  border: 1px solid rgba(57, 101, 63,0.3);
   border-radius: var(--radius-full);
   transition: background var(--transition), color var(--transition);
 }

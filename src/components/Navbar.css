@@ -5,7 +5,7 @@
   left: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 8px rgba(124, 152, 133, 0.6);
+  box-shadow: 0 0 8px rgba(57, 101, 63, 0.6);
   border-radius: 0 2px 2px 0;
   pointer-events: none;
   z-index: 101;
@@ -30,8 +30,8 @@
   top: 50%;
   transform: translateY(-50%);
   height: 34px;
-  background: rgba(124, 152, 133, 0.12);
-  border: 1.5px solid rgba(124, 152, 133, 0.28);
+  background: rgba(57, 101, 63, 0.12);
+  border: 1.5px solid rgba(57, 101, 63, 0.28);
   border-radius: 10px;
   pointer-events: none;
   z-index: 0;
@@ -92,6 +92,6 @@
     border-radius: 10px;
   }
   .nav-links a.active {
-    background: rgba(124, 152, 133, 0.1);
+    background: rgba(57, 101, 63, 0.1);
   }
 }

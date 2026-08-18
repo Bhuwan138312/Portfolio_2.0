@@ -91,10 +91,10 @@
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--accent);
-  background: rgba(124, 152, 133, 0.1);
+  background: rgba(57, 101, 63, 0.1);
   padding: 8px 18px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(124, 152, 133, 0.2);
+  border: 1px solid rgba(57, 101, 63, 0.2);
 }
 
 .badge-dot {
@@ -109,11 +109,11 @@
 
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(124, 152, 133, 0.4);
+    box-shadow: 0 0 0 0 rgba(57, 101, 63, 0.4);
   }
 
   50% {
-    box-shadow: 0 0 0 6px rgba(124, 152, 133, 0);
+    box-shadow: 0 0 0 6px rgba(57, 101, 63, 0);
   }
 }
 
@@ -206,7 +206,7 @@
   font-size: 0.85rem;
   font-weight: 700;
   white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(124, 152, 133, 0.4);
+  box-shadow: 0 4px 20px rgba(57, 101, 63, 0.4);
   z-index: 10;
   pointer-events: none;
   animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;

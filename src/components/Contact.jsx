@@ -89,7 +89,7 @@ function MagneticSocial({ href, ariaLabel, children }) {
 
 /* ── Contact section ─────────────────────────────────────── */
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', message: '', botField: '' });
   const [msgBox, setMsgBox] = useState(null); // 'success' | 'error' | null
   const [submitting, setSubmitting] = useState(false);
   const magSubmit = useMagnetic(0.25);
@@ -98,6 +98,14 @@ export default function Contact() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    // Honeypot check for spam bots
+    if (form.botField) {
+      setForm({ name: '', email: '', message: '', botField: '' });
+      setMsgBox({ type: 'success' });
+      return;
+    }
+
     const missed = [];
     if (!form.name.trim()) missed.push('Name');
     if (!form.email.trim()) missed.push('Email');
@@ -116,7 +124,7 @@ export default function Contact() {
     if (result.error) {
       alert(result.error);
     } else {
-      setForm({ name: '', email: '', message: '' });
+      setForm({ name: '', email: '', message: '', botField: '' });
       setMsgBox({ type: 'success' });
     }
   };
@@ -131,6 +139,10 @@ export default function Contact() {
         </p>
         <div className="contact-grid">
           <form className="contact-form reveal-left" style={{ transitionDuration: '3.5s' }} onSubmit={onSubmit} noValidate>
+            <div style={{ display: 'none' }} aria-hidden="true">
+              <label htmlFor="botField">Do not fill this out if you are human</label>
+              <input type="text" id="botField" name="botField" value={form.botField} onChange={handle} tabIndex="-1" autoComplete="off" />
+            </div>
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input id="name" name="name" type="text" value={form.name} onChange={handle} placeholder="Your full name" />

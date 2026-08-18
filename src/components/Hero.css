@@ -98,17 +98,43 @@
 }
 
 @keyframes highlightSweep {
-  0%   { width: 0%; opacity: 1; }
-  30%  { width: 100%; opacity: 1; }
-  70%  { width: 100%; opacity: 1; }
-  100% { width: 100%; opacity: 0; }
+  0% {
+    width: 0%;
+    opacity: 1;
+  }
+
+  30% {
+    width: 100%;
+    opacity: 1;
+  }
+
+  70% {
+    width: 100%;
+    opacity: 1;
+  }
+
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
 }
 
 @keyframes textColorChange {
-  0%   { color: var(--text-muted); }
-  30%  { color: var(--text-muted); }
-  70%  { color: var(--accent); }
-  100% { color: var(--accent); }
+  0% {
+    color: var(--text-muted);
+  }
+
+  30% {
+    color: var(--text-muted);
+  }
+
+  70% {
+    color: var(--accent);
+  }
+
+  100% {
+    color: var(--accent);
+  }
 }
 
 .typewriter-cursor {

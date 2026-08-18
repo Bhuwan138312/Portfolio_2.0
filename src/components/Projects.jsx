@@ -3,23 +3,17 @@
 import { useState } from 'react';
 import useMagnetic from '../hooks/useMagnetic';
 import useTilt from '../hooks/useTilt';
+import Image from 'next/image';
 import './Projects.css';
 
 import accessaHome from "../assets/AccessaBank/Home'.png";
 import { projects } from '../data/projectsData';
 
 function ProjectCard({ p, className = '' }) {
-  const { ref, tiltProps } = useTilt({ max: 12, scale: 1.04, ease: 0.10 });
-
   return (
     <article
-      ref={ref}
       className={`project-card ${className}`}
-      style={{ willChange: 'transform' }}
-      {...tiltProps}
     >
-      {/* Glare overlay — position updated by useTilt */}
-      <div className="tilt-glare" />
 
       <div className="card-img-wrap">
         <div
@@ -53,17 +47,11 @@ function ProjectCard({ p, className = '' }) {
 
 /* ── Featured UX Project Card ─── */
 function FeaturedUXCard({ p, className = '' }) {
-  const { ref, tiltProps } = useTilt({ max: 5, scale: 1.02, ease: 0.10 });
-
   return (
     <article
-      ref={ref}
       className={`featured-ux-card ${className}`}
-      style={{ willChange: 'transform' }}
-      {...tiltProps}
     >
       <div className="featured-content" style={{ position: 'relative', overflow: 'hidden', borderRadius: 'inherit' }}>
-        <div className="tilt-glare" style={{ zIndex: 0, borderRadius: 'inherit' }} />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div className="featured-badge">Featured UI/UX Design</div>
           <h3>{p.title}</h3>
@@ -102,7 +90,7 @@ function FeaturedUXCard({ p, className = '' }) {
         <div className="desktop-visuals">
           {p.images?.map((img, i) => (
             <div key={i} className={`desktop-frame d-frame-${i}`}>
-              <img src={img.src || img} alt={`${p.title} screen ${i + 1}`} />
+              <Image src={img} alt={`${p.title} screen ${i + 1}`} style={{ width: '100%', height: 'auto' }} priority />
             </div>
           ))}
         </div>
@@ -110,7 +98,7 @@ function FeaturedUXCard({ p, className = '' }) {
         <div className="featured-visuals">
           {p.images?.map((img, i) => (
             <div key={i} className={`mockup-frame frame-${i}`}>
-              <img src={img.src || img} alt={`${p.title} screen ${i + 1}`} />
+              <Image src={img} alt={`${p.title} screen ${i + 1}`} style={{ width: '100%', height: 'auto' }} priority />
             </div>
           ))}
         </div>
